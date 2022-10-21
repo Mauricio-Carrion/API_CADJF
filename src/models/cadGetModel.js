@@ -19,7 +19,7 @@ module.exports = {
 
   getClientCNPJQuery: (code) => {
     return new Promise((resolve, reject) => {
-      db.query(`SELECT id_cli, nomfan, razcli, cnpj, endcli, numend, cidend, baiend, obscli, stacli  FROM cadcli WHERE cnpj = ${code}`,
+      db.query(`SELECT id_cli, nomfan, razcli, cnpj, obscli, stacli  FROM cadcli WHERE cnpj = ${code}`,
         (error, results) => {
           if (error) { return reject(error); }
 

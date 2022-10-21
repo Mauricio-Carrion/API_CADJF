@@ -14,10 +14,6 @@ module.exports = {
       nome = req.body.nome,
       razcli = req.body.razao,
       cnpj = req.body.cnpj,
-      endcli = req.body.endereco,
-      numend = req.body.numero,
-      cidend = req.body.cidade,
-      baiend = req.body.bairro,
       obscli = req.body.obs,
       stacli = req.body.status
     ];
@@ -30,7 +26,7 @@ module.exports = {
     });
 
     //Verifica quantidade de campos preenchidos
-    if (params.length < 10) {
+    if (params.length < 6) {
 
       res.status(422).json({ msg: 'Estão faltando campos.' });
 
@@ -43,6 +39,7 @@ module.exports = {
       ).cnpj) {
 
       res.status(422).json({ msg: 'Cliente já possui cadastro.' });
+
       //Valida nome
     } else if (params[1].length > 50) {
 
@@ -57,10 +54,6 @@ module.exports = {
     } else if (params[3].length < 14 || params[3].length > 14) {
 
       res.status(422).json({ msg: 'Insira um CNPJ válido.' });
-      //Valida endereço
-    } else if (params[4].length > 30) {
-
-      res.status(422).json({ msg: 'Use até 30 caracteres para o endereço.' });
 
     } else {
       let userCode = await cadPostModel.postClientQuery(params);
@@ -69,12 +62,8 @@ module.exports = {
         nome: params[1],
         razao: params[2],
         cnpj: params[3],
-        endereco: params[4],
-        numero: params[5],
-        cidade: params[6],
-        bairro: params[7],
-        obs: params[8],
-        status: params[9],
+        obs: params[4],
+        status: params[5],
       });
     }
   }
