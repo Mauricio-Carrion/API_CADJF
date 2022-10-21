@@ -4,6 +4,21 @@ module.exports = {
   //GET Query's
   getClientQuery: (code) => {
     return new Promise((resolve, reject) => {
+      db.query(`SELECT id_cli, nomfan, razcli, cnpj, endcli, numend, cidend, baiend, obscli, stacli  FROM cadcli WHERE id_cli = ${code}`,
+        (error, results) => {
+          if (error) { return reject(error); }
+
+          if (results.length > 0) {
+            resolve(results[0]);
+          } else {
+            resolve(false);
+          }
+        });
+    });
+  },
+
+  getClientCNPJQuery: (code) => {
+    return new Promise((resolve, reject) => {
       db.query(`SELECT id_cli, nomfan, razcli, cnpj, endcli, numend, cidend, baiend, obscli, stacli  FROM cadcli WHERE cnpj = ${code}`,
         (error, results) => {
           if (error) { return reject(error); }

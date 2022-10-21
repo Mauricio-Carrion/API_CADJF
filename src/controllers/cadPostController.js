@@ -1,5 +1,5 @@
-const { json } = require('body-parser');
-const { getClientQuery, getUserQuery } = require('../models/cadGetModel');
+//const { json } = require('body-parser');
+const { getClientCNPJQuery } = require('../models/cadGetModel');
 const cadPostModel = require('../models/cadPostModel');
 const { param } = require('../routes');
 
@@ -31,18 +31,9 @@ module.exports = {
       res.status(422).json({ msg: 'Estão faltando campos.' });
 
     } else if (
-      params[0] == JSON.parse(
-        JSON.stringify(
-          await getUserQuery(params[0])
-        )
-      ).usu_id) {
-
-      res.status(422).json({ msg: 'Código de usuário invalido' });
-
-    } else if (
       params[3] == JSON.parse(
         JSON.stringify(
-          await getClientQuery(params[3])
+          await getClientCNPJQuery(params[3])
         )
       ).cnpj) {
 
