@@ -17,6 +17,7 @@ router.get('/cliente_usuario/:codigo', cadGetController.getClientsByUser);
 //POST
 router.post('/usuarios', cadPostController.postUser);
 router.post('/clientes', cadPostController.postClient);
+router.post('/visitas', cadPostController.postVisits);
 
 
 

@@ -1,14 +1,18 @@
 //const { json } = require('body-parser');
 const { getClientCNPJQuery, getUserNameQuery } = require('../models/cadGetModel');
 const cadPostModel = require('../models/cadPostModel');
+const cadGetController = require('./cadGetController');
 //const { param } = require('../routes');
 
 module.exports = {
   /**********POST************/
+
   /////////////Post usuario\\\\\\\\\\\\\\
   postUser: async (req, res) => {
+
+    //Adiciona parametros da requisição em um array
     const reqParams = [
-      usuario = req.body.usuario,
+      usuario = req.body.usuario.toUpperCase(),
       senha = req.body.senha,
       nome = req.body.nome,
       sobre = req.body.sobrenome,
@@ -33,10 +37,9 @@ module.exports = {
         JSON.stringify(
           await getUserNameQuery(params[0])
         )
-      ).usuario
-    ) {
+      ).usuario) {
 
-      res.status(422).json({ msg: 'O nome de usuário já possui cadastro.' });
+      res.status(404).json({ msg: 'O nome de usuário já possui cadastro.' });
 
       //Valida Usuario
     } else if (params[0].length > 15) {
@@ -59,16 +62,15 @@ module.exports = {
       res.status(422).json({ msg: 'Use até 30 caracteres para o sobrenome.' });
 
       //Valida Adm
-    } else if (params[4] != 0 || params[4] != 1) {
+    } else if (!(params[4] === 'true') && !(params[4] === 'false')) {
 
       res.status(422).json({ msg: 'Use apenas booleano no campo adm.' });
-      console.log(params[4] === true)
 
       //Grava no banco se todos os testes foram false
     } else {
-      let clientCode = await cadPostModel.postUserQuery(params);
+      let userCode = await cadPostModel.postUserQuery(params);
       res.status(200).json({
-        codigo: clientCode.insertId,
+        codigo: userCode.insertId,
         usuario: params[0],
         nome: params[2],
         sobrenome: params[3],
@@ -76,7 +78,6 @@ module.exports = {
       });
     }
   },
-
 
   /////////////Post cliente\\\\\\\\\\\\\\
   postClient: async (req, res) => {
@@ -97,19 +98,16 @@ module.exports = {
         return e;
       }
     });
-
     //Verifica quantidade de campos preenchidos
     if (params.length < 6) {
 
       res.status(422).json({ msg: 'Estão faltando campos.' });
 
+    } else if (!parseInt(params[3])) {
+
+      res.status(422).json({ msg: 'Insira um CNPJ válido.' });
       //Verificar se o cliente já possui cadastro
-    } else if (
-      params[3] == JSON.parse(
-        JSON.stringify(
-          await getClientCNPJQuery(params[3])
-        )
-      ).cnpj) {
+    } else if (await cadGetController.getClientCNPJ(params[3]) == false) {
 
       res.status(422).json({ msg: 'Cliente já possui cadastro.' });
 
@@ -150,5 +148,70 @@ module.exports = {
         status: params[5],
       });
     }
-  }
+  },
+
+  /////////////POST visitas\\\\\\\\\\\\\\\
+
+  postVisits: async (req, res) => {
+    //Adiciona parametros da requisição em um array
+    const reqParams = [
+      cliente = req.body.cliente,
+      data = req.body.data,
+      desc = req.body.descricao,
+      obs = req.body.obs
+    ];
+    //Filtra parametros preenchidos
+    const params = reqParams.filter(e => {
+      if (e) {
+        return e
+      }
+    });
+    //valida quantidade de parametros preenchidos
+    if (params.length < 4) {
+
+      res.status(422).json({ msg: 'Estão faltando campos.' });
+
+      //Verifica se o código do cliente é um numero
+    } else if (!parseInt(params[0])) {
+
+      res.status(422).json({ msg: 'Apenas números no campo cliente' });
+
+      //Verifica se o numero tem até 11 digitos
+    } else if (params[0].length > 11) {
+
+      res.status(422).json({ msg: 'Insira até 11 dígitos no campo cliente' });
+
+      //Verica se existe um cliente com o codigo informado
+    } else if (await cadGetController.getClientId(params[0]) == false) {
+
+      res.status(404).json({ msg: 'Cliente não encontrado' });
+
+      //Verifica se a data está valida
+    } else if (new Date(params[1]) == 'Invalid Date') {
+
+      res.status(422).json({ msg: 'Insira uma data válida' });
+
+      //verifica descrição
+    } else if (params[2].length > 50) {
+
+      res.status(422).json({ msg: 'Use até 50 caracteres para descrição.' });
+
+      //Verifica observação
+    } else if (params[3].length > 50) {
+
+      res.status(422).json({ msg: 'Use até 150 caracteres para descrição.' });
+
+      //Grava no banco se todos os testes foram false
+    } else {
+      let visitCode = await cadPostModel.postVisitQuery(params);
+      res.status(200).json({
+        codigo: visitCode.insertId,
+        cliente: params[1],
+        data: params[2],
+        descricao: params[3],
+        obsevacao: params[4],
+      });
+    }
+  },
+
 };

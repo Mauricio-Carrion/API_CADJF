@@ -1,10 +1,11 @@
 const db = require('../db');
 
 module.exports = {
+
   //GET Query's
   getClientQuery: (code) => {
     return new Promise((resolve, reject) => {
-      db.query(`SELECT id_cli, nomfan, razcli, cnpj, endcli, numend, cidend, baiend, obscli, stacli  FROM cadcli WHERE id_cli = ${code}`,
+      db.query(`SELECT id_cli, nomfan, razcli, cnpj, obscli, stacli  FROM cadcli WHERE id_cli = ${code}`,
         (error, results) => {
           if (error) { return reject(error); }
 
@@ -17,9 +18,9 @@ module.exports = {
     });
   },
 
-  getClientCNPJQuery: (code) => {
+  getClientCNPJQuery: (cnpj) => {
     return new Promise((resolve, reject) => {
-      db.query(`SELECT id_cli, nomfan, razcli, cnpj, obscli, stacli  FROM cadcli WHERE cnpj = ${code}`,
+      db.query(`SELECT cnpj FROM cadcli WHERE cnpj = ${cnpj}`,
         (error, results) => {
           if (error) { return reject(error); }
 
@@ -28,13 +29,23 @@ module.exports = {
           } else {
             resolve(false);
           }
+        });
+    });
+  },
+
+  getClientIdQuery: (id) => {
+    return new Promise((resolve, reject) => {
+      db.query(`SELECT id_cli FROM cadcli WHERE id_cli = ${id}`,
+        (error, results) => {
+          if (error) { return reject(error); }
+          resolve(results);
         });
     });
   },
 
   getAllClientsQuery: () => {
     return new Promise((resolve, reject) => {
-      db.query('SELECT id_cli, nomfan, razcli, cnpj, endcli, numend, cidend, baiend, obscli, stacli  FROM cadcli',
+      db.query('SELECT id_cli, nomfan, razcli, cnpj, obscli, stacli  FROM cadcli',
         (error, results) => {
           if (error) { return reject(error); }
           resolve(results);
@@ -60,16 +71,6 @@ module.exports = {
   getAllVisitsQuery: () => {
     return new Promise((resolve, reject) => {
       db.query('SELECT datvis, desvis, obsvis FROM cadvis',
-        (error, results) => {
-          if (error) { return reject(error); }
-          resolve(results);
-        });
-    });
-  },
-
-  getAllUsersQuery: () => {
-    return new Promise((resolve, reject) => {
-      db.query('SELECT id_usu, usuario, senha, nomusu, sobusu, adm FROM cadusu',
         (error, results) => {
           if (error) { return reject(error); }
           resolve(results);
@@ -107,6 +108,16 @@ module.exports = {
     });
   },
 
+  getAllUsersQuery: () => {
+    return new Promise((resolve, reject) => {
+      db.query('SELECT id_usu, usuario, senha, nomusu, sobusu, adm FROM cadusu',
+        (error, results) => {
+          if (error) { return reject(error); }
+          resolve(results);
+        });
+    });
+  },
+
   getVisitsByClientQuery: (clientCode) => {
     return new Promise((resolve, reject) => {
       db.query(`SELECT datvis, desvis, obsvis FROM cadvis WHERE cli_id = ${clientCode}`,
@@ -119,23 +130,11 @@ module.exports = {
 
   getClientsByUserQuery: (clientCode) => {
     return new Promise((resolve, reject) => {
-      db.query(`SELECT id_cli, nomfan, razcli, cnpj, endcli, numend, cidend, baiend, obscli, stacli FROM cadcli WHERE usu_id = ${clientCode}`,
+      db.query(`SELECT id_cli, nomfan, razcli, cnpj, obscli, stacli FROM cadcli WHERE usu_id = ${clientCode}`,
         (error, results) => {
           if (error) { return reject(error); }
           resolve(results);
         });
     });
   },
-
-  //POST Query's
-  postClientQuery: (params) => {
-    console.log(params)
-    return new Promise((resolve, reject) => {
-      db.query(`INSERT INTO cadcli (usu_id, nomfan, razcli, cnpj, endcli, numend, cidend, baiend, obscli, stacli) VALUES (${params[0]}, '${params[1]}', '${params[2]}', ${params[3]}, '${params[4]}', ${params[5]}, '${params[6]}', '${params[7]}', '${params[8]}', '${params[9]}')`,
-        (error, results) => {
-          if (error) { return reject(error); }
-          resolve(results);
-        });
-    });
-  }
 };

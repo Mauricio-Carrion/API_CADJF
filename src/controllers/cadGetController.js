@@ -1,5 +1,5 @@
 const cadGetModel = require('../models/cadGetModel');
-const { param } = require('../routes');
+//const { param } = require('../routes');
 
 module.exports = {
   /**********GET************/
@@ -18,24 +18,27 @@ module.exports = {
       }
 
     } else {
-      res.status(422).json({ msg: 'insira um CNPJ válido código válido' });
+      res.status(422).json({ msg: 'insira um código válido' });
     }
   },
 
   //Busca cliente CNPJ
-  getClientCNPJ: async (req, res) => {
-    let cnpj = parseInt(req.params.cnpj);
-    if (cnpj) {
-      let client = await cadGetModel.getClientCNPJQuery(cnpj);
-
-      if (client) {
-        res.status(200).json(client);
-      } else {
-        res.status(404).json({ msg: 'cliente não encontrado' });
-      }
-
+  getClientCNPJ: async (cnpj) => {
+    let clientCNPJ = await cadGetModel.getClientCNPJQuery(cnpj);
+    console.log(clientCNPJ)
+    if (!clientCNPJ) {
+      return true;
     } else {
-      res.status(422).json({ msg: 'insira um CNPJ válido código válido' });
+      return false;
+    }
+  },
+
+  getClientId: async (id) => {
+    let client = await cadGetModel.getClientIdQuery(id);
+    if (!client) {
+      return true;
+    } else {
+      return false;
     }
   },
 
@@ -89,7 +92,8 @@ module.exports = {
       result.push({
         codigo: visits[i].id_vis,
         data: visits[i].datvis,
-        descricao: visits[i].obsvis
+        descricao: visits[i].desvis,
+        observacao: visits[i].obsvis
       });
     }
     res.json(result);
@@ -138,7 +142,8 @@ module.exports = {
         result.push({
           codigo: visits[i].id_vis,
           data: visits[i].datvis,
-          descricao: visits[i].obsvis
+          descricao: visits[i].desvis,
+          observacao: visits[i].obsvis
         });
       }
     }
