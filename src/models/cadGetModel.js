@@ -92,6 +92,21 @@ module.exports = {
     });
   },
 
+  getUserNameQuery: (userName) => {
+    return new Promise((resolve, reject) => {
+      db.query(`SELECT usuario FROM cadusu WHERE usuario = '${userName}'`,
+        (error, results) => {
+          if (error) { return reject(error); }
+
+          if (results.length > 0) {
+            resolve(results[0]);
+          } else {
+            resolve(false);
+          }
+        });
+    });
+  },
+
   getVisitsByClientQuery: (clientCode) => {
     return new Promise((resolve, reject) => {
       db.query(`SELECT datvis, desvis, obsvis FROM cadvis WHERE cli_id = ${clientCode}`,
