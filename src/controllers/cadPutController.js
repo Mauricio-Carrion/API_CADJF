@@ -96,11 +96,11 @@ module.exports = {
       }
     });
 
-    //Verifica quantidade de campos preenchidos
     if (!(await cadGetController.getClientId(clientCode))) {
 
       res.status(404).json({ msg: 'Cliente não encontrado.' });
 
+      //Verifica quantidade de campos preenchidos
     } else if (params.length < 6) {
 
       res.status(422).json({ msg: 'Estão faltando campos.' });
@@ -157,6 +157,71 @@ module.exports = {
   //PUT Visita
 
   putVisit: async (req, res) => {
+    let visitCode = req.params.codigo;
 
+    const reqParams = [
+      cliente = req.body.cliente,
+      data = req.body.data,
+      desc = req.body.descricao,
+      obs = req.body.obs
+    ];
+
+    //Filtra parametros preenchidos
+    const params = reqParams.filter(e => {
+      if (e) {
+        return e
+      }
+    });
+
+    if (!(cadGetController.getVisitId(visitCode))) {
+
+      res.status(404).json({ msg: 'Visita não encontrada' });
+
+      //Valida quantidade de parametros preenchidos
+    } else if (params.length < 4) {
+
+      res.status(422).json({ msg: 'Estão faltando campos.' });
+
+      //Verifica se o código do cliente é um numero
+    } else if (!parseInt(params[0])) {
+
+      res.status(422).json({ msg: 'Apenas números no campo cliente' });
+
+      //Verifica se o numero tem até 11 digitos
+    } else if (params[0].length > 11) {
+
+      res.status(422).json({ msg: 'Insira até 11 dígitos no campo cliente' });
+
+      //Verifica se existe um cliente com o codigo informado
+    } else if (!(await cadGetController.getClientId(params[0]))) {
+
+      res.status(404).json({ msg: 'Cliente não encontrado' });
+
+      //Verifica se a data está valida
+    } else if (new Date(params[1]) == 'Invalid Date') {
+
+      res.status(422).json({ msg: 'Insira uma data válida' });
+
+      //verifica descrição
+    } else if (params[2].length > 50) {
+
+      res.status(422).json({ msg: 'Use até 50 caracteres para descrição.' });
+
+      //Verifica observação
+    } else if (params[3].length > 50) {
+
+      res.status(422).json({ msg: 'Use até 150 caracteres para descrição.' });
+
+      //Grava no banco se todos os testes foram false
+    } else {
+      await cadPutModel.putVisitQuery(visitCode, params);
+      res.status(200).json({
+        codigo: visitCode,
+        cliente: params[1],
+        data: params[2],
+        descricao: params[3],
+        obsevacao: params[4],
+      });
+    }
   }
 };

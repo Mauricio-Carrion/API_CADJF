@@ -74,6 +74,11 @@ module.exports = {
     }
   },
 
+  getVisitId: async (id) => {
+    let visit = await cadGetModel.getVisitIdQuery(id);
+    return visit;
+  },
+
   // Busca todas visitas
   getAllVisits: async (req, res) => {
     let result = [];

@@ -73,6 +73,21 @@ module.exports = {
     });
   },
 
+  getVisitIdQuery: (id) => {
+    return new Promise((resolve, reject) => {
+      db.query(`SELECT id_vis FROM cadvis WHERE id_vis = ${id}`,
+        (error, results) => {
+          if (error) { return reject(error); }
+
+          if (results.length > 0) {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        });
+    });
+  },
+
   getAllVisitsQuery: () => {
     return new Promise((resolve, reject) => {
       db.query('SELECT datvis, desvis, obsvis FROM cadvis',

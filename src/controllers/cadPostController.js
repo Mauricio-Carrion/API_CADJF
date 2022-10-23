@@ -178,8 +178,8 @@ module.exports = {
 
       res.status(422).json({ msg: 'Insira até 11 dígitos no campo cliente' });
 
-      //Verica se existe um cliente com o codigo informado
-    } else if (await cadGetController.getClientId(params[0])) {
+      //Verifica se existe um cliente com o codigo informado
+    } else if (!(await cadGetController.getClientId(params[0]))) {
 
       res.status(404).json({ msg: 'Cliente não encontrado' });
 
@@ -210,5 +210,4 @@ module.exports = {
       });
     }
   }
-
 };
