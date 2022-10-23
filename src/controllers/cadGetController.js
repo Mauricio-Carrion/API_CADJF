@@ -1,3 +1,4 @@
+const { getUserNameQuery } = require('../models/cadGetModel');
 const cadGetModel = require('../models/cadGetModel');
 //const { param } = require('../routes');
 
@@ -22,24 +23,15 @@ module.exports = {
     }
   },
 
-  //Busca cliente CNPJ
+  //Verifica se o cliente já tem cadastro
   getClientCNPJ: async (cnpj) => {
     let clientCNPJ = await cadGetModel.getClientCNPJQuery(cnpj);
-    console.log(clientCNPJ)
-    if (!clientCNPJ) {
-      return true;
-    } else {
-      return false;
-    }
+    return clientCNPJ;
   },
-
+  //Verifica se existe um cliente com o código informado
   getClientId: async (id) => {
     let client = await cadGetModel.getClientIdQuery(id);
-    if (!client) {
-      return true;
-    } else {
-      return false;
-    }
+    return client;
   },
 
   //Busca todos clientes
@@ -110,6 +102,17 @@ module.exports = {
       result = user;
     }
     res.json(result);
+  },
+
+  //Verifica se o usuario já existe
+  getUserName: async (username) => {
+    let user = await getUserNameQuery(username);
+    return user;
+  },
+
+  getUserId: async (id) => {
+    let user = await cadGetModel.getUserIdQuery(id);
+    return user;
   },
 
   //Busca todos os usuarios

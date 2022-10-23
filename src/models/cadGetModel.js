@@ -25,7 +25,7 @@ module.exports = {
           if (error) { return reject(error); }
 
           if (results.length > 0) {
-            resolve(results[0]);
+            resolve(true);
           } else {
             resolve(false);
           }
@@ -38,7 +38,12 @@ module.exports = {
       db.query(`SELECT id_cli FROM cadcli WHERE id_cli = ${id}`,
         (error, results) => {
           if (error) { return reject(error); }
-          resolve(results);
+
+          if (results.length > 0) {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
         });
     });
   },
@@ -100,7 +105,22 @@ module.exports = {
           if (error) { return reject(error); }
 
           if (results.length > 0) {
-            resolve(results[0]);
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        });
+    });
+  },
+
+  getUserIdQuery: (id) => {
+    return new Promise((resolve, reject) => {
+      db.query(`SELECT id_usu FROM cadusu WHERE id_usu = ${id}`,
+        (error, results) => {
+          if (error) { return reject(error); }
+
+          if (results.length > 0) {
+            resolve(true);
           } else {
             resolve(false);
           }
