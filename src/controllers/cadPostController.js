@@ -209,6 +209,6 @@ module.exports = {
         obsevacao: params[4],
       });
     }
-  },
+  }
 
 };

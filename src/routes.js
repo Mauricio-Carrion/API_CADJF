@@ -23,7 +23,7 @@ router.post('/visitas', cadPostController.postVisits);
 //PUT
 router.put('/usuario/:codigo', cadPutController.putUser);
 router.put('/cliente/:codigo', cadPutController.putClient);
-router.put('/visita/:codigo');
+router.put('/visita/:codigo', cadPutController.putVisit);
 
 
 module.exports = router;

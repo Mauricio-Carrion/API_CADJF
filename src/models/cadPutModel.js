@@ -9,5 +9,15 @@ module.exports = {
           resolve(results);
         });
     });
-  }
+  },
+
+  putClientQuery: (code, params) => {
+    return new Promise((resolve, reject) => {
+      db.query(`UPDATE cadcli SET usu_id = ${params[0]}, nomfan = '${params[1]}', razcli = '${params[2]}', cnpj = ${params[3]}, obscli = '${params[4]}', stacli = '${params[5]}' WHERE id_cli = ${code}`,
+        (error, results) => {
+          if (error) { return reject(error) }
+          resolve(results);
+        });
+    });
+  },
 };

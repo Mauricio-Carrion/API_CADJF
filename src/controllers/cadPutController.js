@@ -75,6 +75,7 @@ module.exports = {
     }
   },
 
+  //PUT Cliente
   putClient: async (req, res) => {
     let clientCode = req.params.codigo
 
@@ -141,9 +142,9 @@ module.exports = {
 
       //Grava no banco se todos os testes foram false
     } else {
-      await cadPutModel.putClientQuery(params);
+      await cadPutModel.putClientQuery(clientCode, params);
       res.status(200).json({
-        codigo: userCode,
+        codigo: clientCode,
         nome: params[1],
         razao: params[2],
         cnpj: params[3],
@@ -151,5 +152,11 @@ module.exports = {
         status: params[5],
       });
     }
+  },
+
+  //PUT Visita
+
+  putVisit: async (req, res) => {
+
   }
 };
