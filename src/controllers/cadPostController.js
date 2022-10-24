@@ -6,6 +6,27 @@ const jwt = require('jsonwebtoken');
 module.exports = {
   /**********POST************/
 
+  /////////////Autenticação\\\\\\\\\\\\\
+
+  authUser: async (req, res) => {
+    let usuario = req.body.usuario;
+    let senha = req.body.senha;
+
+    if (!usuario) {
+
+      res.status(422).json({ msg: 'Usuario é obrigatório' });
+
+    } else if (!senha) {
+
+      res.status(422).json({ msg: 'Senha é obrigatória' });
+
+    } else if (!(await cadGetController.getUserName(usuario))) {
+
+      res.status(422).json({ msg: 'Usuário não encontrado' });
+
+    }
+  },
+
   /////////////Post usuario\\\\\\\\\\\\\\
   postUser: async (req, res) => {
 

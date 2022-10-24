@@ -6,6 +6,10 @@ const cadPostController = require('./controllers/cadPostController');
 const cadPutController = require('./controllers/cadPutController');
 const cadDeleteController = require('./controllers/cadDeleteController');
 
+//Rota de autenticação
+
+router.post('/auth/login', cadPostController.authUser);
+
 //GET
 router.get('/usuarios', cadGetController.getAllUsers);
 router.get('/usuario/:codigo', cadGetController.getUser);
