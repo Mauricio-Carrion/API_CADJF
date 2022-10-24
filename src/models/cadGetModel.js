@@ -63,7 +63,7 @@ module.exports = {
       db.query(`SELECT datvis, desvis, obsvis FROM cadvis WHERE id_vis = ${visitCode}`,
         (error, results) => {
           if (error) { return reject(error); }
-
+          console.log(results)
           if (results.length > 0) {
             resolve(results[0]);
           } else {
@@ -131,6 +131,21 @@ module.exports = {
   getUserIdQuery: (id) => {
     return new Promise((resolve, reject) => {
       db.query(`SELECT id_usu FROM cadusu WHERE id_usu = ${id}`,
+        (error, results) => {
+          if (error) { return reject(error); }
+
+          if (results.length > 0) {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        });
+    });
+  },
+
+  getUserHasClientQuery: (codeUser) => {
+    return new Promise((resolve, reject) => {
+      db.query(`SELECT usu_id FROM cadcli WHERE usu_id = ${codeUser}`,
         (error, results) => {
           if (error) { return reject(error); }
 

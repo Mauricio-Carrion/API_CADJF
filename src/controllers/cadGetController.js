@@ -120,6 +120,11 @@ module.exports = {
     return user;
   },
 
+  getUserHasClient: async (codeUser) => {
+    let client = await cadGetModel.getUserHasClientQuery(codeUser);
+    return client;
+  },
+
   //Busca todos os usuarios
   getAllUsers: async (req, res) => {
     let result = [];

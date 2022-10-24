@@ -4,6 +4,7 @@ const router = express.Router();
 const cadGetController = require('./controllers/cadGetController');
 const cadPostController = require('./controllers/cadPostController');
 const cadPutController = require('./controllers/cadPutController');
+const cadDeleteController = require('./controllers/cadDeleteController');
 
 //GET
 router.get('/usuarios', cadGetController.getAllUsers);
@@ -24,6 +25,11 @@ router.post('/visitas', cadPostController.postVisits);
 router.put('/usuario/:codigo', cadPutController.putUser);
 router.put('/cliente/:codigo', cadPutController.putClient);
 router.put('/visita/:codigo', cadPutController.putVisit);
+
+//DELETE
+router.delete('/usuario/:codigo', cadDeleteController.deleteUser);
+router.delete('/cliente/:codigo', cadDeleteController.deleteClient);
+router.delete('/visita/:codigo',);
 
 
 module.exports = router;
