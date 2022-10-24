@@ -19,5 +19,15 @@ module.exports = {
           resolve(results);
         });
     });
+  },
+
+  deleteVisitQuery: (code) => {
+    return new Promise((resolve, reject) => {
+      db.query(`DELETE FROM cadvis WHERE id_vis = ${code}`,
+        (error, results) => {
+          if (error) { return reject(error); }
+          resolve(results);
+        });
+    });
   }
 };

@@ -48,6 +48,21 @@ module.exports = {
     });
   },
 
+  getClientHasVisitQuery: (codeClient) => {
+    return new Promise((resolve, reject) => {
+      db.query(`SELECT cli_id FROM cadvis WHERE cli_id = ${codeClient}`,
+        (error, results) => {
+          if (error) { return reject(error); }
+
+          if (results.length > 0) {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        });
+    });
+  },
+
   getAllClientsQuery: () => {
     return new Promise((resolve, reject) => {
       db.query('SELECT id_cli, nomfan, razcli, cnpj, obscli, stacli  FROM cadcli',

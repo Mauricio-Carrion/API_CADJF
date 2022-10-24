@@ -1,12 +1,59 @@
-const { getUserNameQuery } = require('../models/cadGetModel');
 const cadGetModel = require('../models/cadGetModel');
-//const { param } = require('../routes');
 
 module.exports = {
   /**********GET************/
 
-  //Busca um cliente
+  //Busca um usuario
+  getUser: async (req, res) => {
+    let result = {}
 
+    let userCode = req.params.codigo;
+    let user = await cadGetModel.getUserQuery(userCode);
+
+    if (user) {
+      result = user;
+    }
+    res.json(result);
+  },
+
+  //Verifica se o usuario já existe
+  getUserName: async (username) => {
+    let user = await cadGetModel.getUserNameQuery(username);
+    return user;
+  },
+
+  //Verifica se existe usuario
+  getUserId: async (id) => {
+    let user = await cadGetModel.getUserIdQuery(id);
+    return user;
+  },
+
+  //Verifica se o usuario possui cliente
+  getUserHasClient: async (codeUser) => {
+    let client = await cadGetModel.getUserHasClientQuery(codeUser);
+    return client;
+  },
+
+  //Busca todos os usuarios
+  getAllUsers: async (req, res) => {
+    let result = [];
+
+    let users = await cadGetModel.getAllUsersQuery();
+
+    for (let i in users) {
+      result.push({
+        codigo: users[i].id_usu,
+        login: users[i].usuario,
+        senha: users[i].senha,
+        nome: users[i].nomusu,
+        sobrenome: users[i].sobusu,
+        administador: users[i].adm
+      });
+    }
+    res.json(result);
+  },
+
+  //Busca um cliente
   getClient: async (req, res) => {
     let codigo = parseInt(req.params.codigo);
     if (codigo) {
@@ -28,10 +75,17 @@ module.exports = {
     let clientCNPJ = await cadGetModel.getClientCNPJQuery(cnpj);
     return clientCNPJ;
   },
+
   //Verifica se existe um cliente com o código informado
   getClientId: async (id) => {
     let client = await cadGetModel.getClientIdQuery(id);
     return client;
+  },
+
+  //Verifica se o cliente tem visitas
+  getClientHasVisit: async (codeClient) => {
+    let visit = await cadGetModel.getClientHasVisitQuery(codeClient);
+    return visit;
   },
 
   //Busca todos clientes
@@ -74,6 +128,7 @@ module.exports = {
     }
   },
 
+  //Verifica se existe visita
   getVisitId: async (id) => {
     let visit = await cadGetModel.getVisitIdQuery(id);
     return visit;
@@ -91,54 +146,6 @@ module.exports = {
         data: visits[i].datvis,
         descricao: visits[i].desvis,
         observacao: visits[i].obsvis
-      });
-    }
-    res.json(result);
-  },
-
-  //Busca um usuario
-  getUser: async (req, res) => {
-    let result = {}
-
-    let userCode = req.params.codigo;
-    let user = await cadGetModel.getUserQuery(userCode);
-
-    if (user) {
-      result = user;
-    }
-    res.json(result);
-  },
-
-  //Verifica se o usuario já existe
-  getUserName: async (username) => {
-    let user = await getUserNameQuery(username);
-    return user;
-  },
-
-  getUserId: async (id) => {
-    let user = await cadGetModel.getUserIdQuery(id);
-    return user;
-  },
-
-  getUserHasClient: async (codeUser) => {
-    let client = await cadGetModel.getUserHasClientQuery(codeUser);
-    return client;
-  },
-
-  //Busca todos os usuarios
-  getAllUsers: async (req, res) => {
-    let result = [];
-
-    let users = await cadGetModel.getAllUsersQuery();
-
-    for (let i in users) {
-      result.push({
-        codigo: users[i].id_usu,
-        login: users[i].usuario,
-        senha: users[i].senha,
-        nome: users[i].nomusu,
-        sobrenome: users[i].sobusu,
-        administador: users[i].adm
       });
     }
     res.json(result);

@@ -1,7 +1,7 @@
-//const { json } = require('body-parser');
 const cadPostModel = require('../models/cadPostModel');
 const cadGetController = require('./cadGetController');
-//const { param } = require('../routes');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 module.exports = {
   /**********POST************/
@@ -62,6 +62,10 @@ module.exports = {
 
       //Grava no banco se todos os testes foram false
     } else {
+      const salt = await bcrypt.genSalt(12);
+      const passwordHash = await bcrypt.hash(params[1], salt);
+      params[1] = passwordHash;
+
       let userCode = await cadPostModel.postUserQuery(params);
       res.status(200).json({
         codigo: userCode.insertId,

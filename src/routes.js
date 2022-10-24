@@ -29,7 +29,7 @@ router.put('/visita/:codigo', cadPutController.putVisit);
 //DELETE
 router.delete('/usuario/:codigo', cadDeleteController.deleteUser);
 router.delete('/cliente/:codigo', cadDeleteController.deleteClient);
-router.delete('/visita/:codigo',);
+router.delete('/visita/:codigo', cadDeleteController.deleteVisit);
 
 
 module.exports = router;
