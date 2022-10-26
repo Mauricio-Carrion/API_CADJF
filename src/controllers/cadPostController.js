@@ -146,7 +146,6 @@ module.exports = {
     }
     //Grava no banco se todos os testes foram false
 
-
   },
 
   /////////////Post cliente\\\\\\\\\\\\\\

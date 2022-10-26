@@ -6,7 +6,7 @@ module.exports = {
     const token = authHeader && authHeader.split(' ')[1];
 
     if (!token) {
-      return res.status(401).json({ msg: 'Acesso Negado!' });
+      return res.status(401).json({ msg: 'Acesso negado, necessário login.' });
     }
 
     try {
@@ -17,7 +17,7 @@ module.exports = {
       next();
     } catch (error) {
 
-      res.status(400).json({ msg: 'Token inválido!' })
+      res.status(400).json({ msg: 'Token inválido!' });
 
     }
   }

@@ -7,9 +7,9 @@ const cadPostController = require('./controllers/cadPostController');
 const cadPutController = require('./controllers/cadPutController');
 const cadDeleteController = require('./controllers/cadDeleteController');
 
-//Rota de autenticação
-
+//Rotas Publicas
 router.post('/auth/login', cadPostController.authUser); //Publico
+router.post('/usuarios', cadPostController.postUser); //Publico
 
 //GET
 router.get('/usuarios', checkToken, cadGetController.getAllUsers);
@@ -22,7 +22,6 @@ router.get('/visita_cliente/:codigo', checkToken, cadGetController.getVisitsByCl
 router.get('/cliente_usuario/:codigo', checkToken, cadGetController.getClientsByUser);
 
 //POST
-router.post('/usuarios', cadPostController.postUser); //Publico
 router.post('/clientes', checkToken, cadPostController.postClient);
 router.post('/visitas', checkToken, cadPostController.postVisits);
 
