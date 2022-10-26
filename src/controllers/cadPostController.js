@@ -2,7 +2,6 @@ const cadPostModel = require('../models/cadPostModel');
 const cadGetController = require('./cadGetController');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { json } = require('body-parser');
 
 module.exports = {
   /**********POST************/
@@ -40,9 +39,9 @@ module.exports = {
     }
 
     try {
-
+      console.log(user)
       const secret = process.env.SECRET;
-      const token = jwt.sign({ id: user.id }, secret);
+      const token = jwt.sign({ id: user.id_usu }, secret);
 
       res.status(200).json({ msg: 'Autenticação efetuada com sucesso!', token });
 
@@ -76,7 +75,7 @@ module.exports = {
     //Verifica quantidade de campos preenchidos
     if (params.length < 5) {
 
-      res.status(422).json({ msg: 'Estão faltando campos.' });
+      return res.status(422).json({ msg: 'Estão faltando campos.' });
 
     }
 
@@ -84,7 +83,6 @@ module.exports = {
     if (await cadGetController.getUserName(params[0])) {
 
       return res.status(404).json({ msg: 'O nome de usuário já possui cadastro.' });
-
 
     }
 
@@ -145,7 +143,6 @@ module.exports = {
       res.status(500).json({ msg: 'Ocorreu um erro no servidor, tente mais tarde!' });
 
     }
-
   },
 
   /////////////Post cliente\\\\\\\\\\\\\\
@@ -153,12 +150,11 @@ module.exports = {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
     const secret = process.env.SECRET;
-    const tokenID = jwt.verify(token, secret);
-    console.log(tokenID);
+    const tokenID = await jwt.verify(token, secret).id;
 
     //Adiciona parametros da requisição em um array
     const reqParams = [
-      usuario = req.body.usuario,
+      usuario = tokenID,
       nome = req.body.nome,
       razcli = req.body.razao,
       cnpj = req.body.cnpj,
