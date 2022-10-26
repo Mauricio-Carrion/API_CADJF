@@ -2,6 +2,7 @@ const cadPostModel = require('../models/cadPostModel');
 const cadGetController = require('./cadGetController');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const { json } = require('body-parser');
 
 module.exports = {
   /**********POST************/
@@ -56,7 +57,6 @@ module.exports = {
 
   /////////////Post usuario\\\\\\\\\\\\\\
   postUser: async (req, res) => {
-
     //Adiciona parametros da requisição em um array
     const reqParams = [
       usuario = req.body.usuario.toUpperCase(),
@@ -125,6 +125,7 @@ module.exports = {
 
     try {
 
+      //Grava no banco se todos os testes foram false
       const salt = await bcrypt.genSalt(12);
       const passwordHash = await bcrypt.hash(params[1], salt);
       params[1] = passwordHash;
@@ -144,12 +145,16 @@ module.exports = {
       res.status(500).json({ msg: 'Ocorreu um erro no servidor, tente mais tarde!' });
 
     }
-    //Grava no banco se todos os testes foram false
 
   },
 
   /////////////Post cliente\\\\\\\\\\\\\\
   postClient: async (req, res) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    const secret = process.env.SECRET;
+    const tokenID = jwt.verify(token, secret);
+    console.log(tokenID);
 
     //Adiciona parametros da requisição em um array
     const reqParams = [
