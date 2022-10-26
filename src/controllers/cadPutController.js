@@ -25,45 +25,61 @@ module.exports = {
     //Verifica se existe usuario com o codigo passado no parametro
     if (!(await cadGetController.getUserId(userCode))) {
 
-      res.status(404).json({ msg: 'Usuário não encontrado.' });
+      return res.status(404).json({ msg: 'Usuário não encontrado.' });
 
-      //Verifica quantidade de campos preenchidos
-    } else if (params.length < 5) {
+    }
 
-      res.status(422).json({ msg: 'Estão faltando campos.' });
+    //Verifica quantidade de campos preenchidos
+    if (params.length < 5) {
 
-      //Verificar se o Usuario já possui cadastro
-    } else if (await cadGetController.getUserName(params[0])) {
+      return res.status(422).json({ msg: 'Estão faltando campos.' });
 
-      res.status(404).json({ msg: 'O nome de usuário já possui cadastro.' });
+    }
 
-      //Valida Usuario
-    } else if (params[0].length > 15) {
+    //Verificar se o Usuario já possui cadastro
+    if (await cadGetController.getUserName(params[0])) {
 
-      res.status(422).json({ msg: 'Use até 15 caracteres para o usuario.' });
+      return res.status(404).json({ msg: 'O nome de usuário já possui cadastro.' });
 
-      //Valida Senha
-    } else if (params[1].length > 64) {
+    }
 
-      res.status(422).json({ msg: 'Use uma senha de até 64 caracteres' });
+    //Valida Usuario
+    if (params[0].length > 15) {
 
-      //Valida Nome
-    } else if (params[2].length > 30) {
+      return res.status(422).json({ msg: 'Use até 15 caracteres para o usuario.' });
 
-      res.status(422).json({ msg: 'Use até 30 caracteres para o nome.' });
+    }
 
-      //Valida Sobrenome
-    } else if (params[3].length > 30) {
+    //Valida Senha
+    if (params[1].length > 64) {
 
-      res.status(422).json({ msg: 'Use até 30 caracteres para o sobrenome.' });
+      return res.status(422).json({ msg: 'Use uma senha de até 64 caracteres' });
 
-      //Valida Adm
-    } else if (!(params[4] === 'true') && !(params[4] === 'false')) {
+    }
 
-      res.status(422).json({ msg: 'Use apenas booleano no campo adm.' });
+    //Valida Nome
+    if (params[2].length > 30) {
 
+      return res.status(422).json({ msg: 'Use até 30 caracteres para o nome.' });
+
+    }
+
+    //Valida Sobrenome
+    if (params[3].length > 30) {
+
+      return res.status(422).json({ msg: 'Use até 30 caracteres para o sobrenome.' });
+
+    }
+
+    //Valida Adm
+    if (!(params[4] === 'true') && !(params[4] === 'false')) {
+
+      return res.status(422).json({ msg: 'Use apenas booleano no campo adm.' });
+
+    }
+
+    try {
       //Grava no banco se todos os testes foram false
-    } else {
       await cadPutModel.putUserQuery(userCode, params);
       res.status(200).json({
         codigo: userCode,
@@ -72,6 +88,10 @@ module.exports = {
         sobrenome: params[3],
         adm: params[4],
       });
+
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ msg: 'Ocorreu um erro no servidor, tente mais tarde.' })
     }
   },
 
@@ -100,48 +120,68 @@ module.exports = {
 
       res.status(404).json({ msg: 'Cliente não encontrado.' });
 
-      //Verifica quantidade de campos preenchidos
-    } else if (params.length < 6) {
+    }
 
-      res.status(422).json({ msg: 'Estão faltando campos.' });
+    //Verifica quantidade de campos preenchidos
+    if (params.length < 6) {
 
-      //Verifica verifica se o cnpj é um numero
-    } else if (!parseInt(params[3])) {
+      return res.status(422).json({ msg: 'Estão faltando campos.' });
 
-      res.status(422).json({ msg: 'Insira um CNPJ válido.' });
+    }
 
-      //Verificar se o cliente já possui cadastro
-    } else if (await cadGetController.getClientCNPJ(params[3])) {
+    //Verifica verifica se o cnpj é um numero
+    if (!parseInt(params[3])) {
 
-      res.status(422).json({ msg: 'Cliente já possui cadastro.' });
+      return res.status(422).json({ msg: 'Insira um CNPJ válido.' });
 
-      //Valida nome
-    } else if (params[1].length > 50) {
+    }
 
-      res.status(422).json({ msg: 'Use até 50 caracteres para o nome.' });
+    //Verificar se o cliente já possui cadastro
+    if (await cadGetController.getClientCNPJ(params[3])) {
 
-      //Valida Razao social
-    } else if (params[2].length > 50) {
+      return res.status(422).json({ msg: 'Cliente já possui cadastro.' });
 
-      res.status(422).json({ msg: 'Use até 50 caracteres para a razão social.' });
+    }
 
-      //Valida CNPJ
-    } else if (params[3].length < 14 || params[3].length > 14) {
+    //Valida nome
+    if (params[1].length > 50) {
 
-      res.status(422).json({ msg: 'Insira um CNPJ válido.' });
+      return res.status(422).json({ msg: 'Use até 50 caracteres para o nome.' });
+
+    }
+
+    //Valida Razao social
+    if (params[2].length > 50) {
+
+      return res.status(422).json({ msg: 'Use até 50 caracteres para a razão social.' });
+
+    }
+
+    //Valida CNPJ
+    if (params[3].length < 14 || params[3].length > 14) {
+
+      return res.status(422).json({ msg: 'Insira um CNPJ válido.' });
 
       //Valida Observação
-    } else if (params[4].length > 150) {
+    }
 
-      res.status(422).json({ msg: 'Use até 150 caracteres para observação.' });
+    if (params[4].length > 150) {
 
-      //Valida Status
-    } else if (params[5].length > 15) {
+      return res.status(422).json({ msg: 'Use até 150 caracteres para observação.' });
 
-      res.status(422).json({ msg: 'Use até 15 caracteres para o status.' });
+
+    }
+
+    //Valida Status
+    if (params[5].length > 15) {
+
+      return res.status(422).json({ msg: 'Use até 15 caracteres para o status.' });
+
+    }
+
+    try {
 
       //Grava no banco se todos os testes foram false
-    } else {
       await cadPutModel.putClientQuery(clientCode, params);
       res.status(200).json({
         codigo: clientCode,
@@ -151,6 +191,10 @@ module.exports = {
         obs: params[4],
         status: params[5],
       });
+
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ msg: 'Ocorreu um erro no servidor, tente mais tarde.' })
     }
   },
 

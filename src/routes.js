@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { checkToken } = require('./middlewares/authMiddleware');
 
 const cadGetController = require('./controllers/cadGetController');
 const cadPostController = require('./controllers/cadPostController');
@@ -8,32 +9,32 @@ const cadDeleteController = require('./controllers/cadDeleteController');
 
 //Rota de autenticação
 
-router.post('/auth/login', cadPostController.authUser);
+router.post('/auth/login', cadPostController.authUser); //Publico
 
 //GET
-router.get('/usuarios', cadGetController.getAllUsers);
-router.get('/usuario/:codigo', cadGetController.getUser);
-router.get('/clientes', cadGetController.getAllClients);
-router.get('/cliente/:codigo', cadGetController.getClient);
-router.get('/visitas', cadGetController.getAllVisits);
-router.get('/visita/:codigo', cadGetController.getVisit);
-router.get('/visita_cliente/:codigo', cadGetController.getVisitsByClient);
-router.get('/cliente_usuario/:codigo', cadGetController.getClientsByUser);
+router.get('/usuarios', checkToken, cadGetController.getAllUsers);
+//router.get('/usuario/:codigo', checkToken, cadGetController.getUser);
+router.get('/clientes', checkToken, cadGetController.getAllClients);
+router.get('/cliente/:codigo', checkToken, cadGetController.getClient);
+router.get('/visitas', checkToken, cadGetController.getAllVisits);
+router.get('/visita/:codigo', checkToken, cadGetController.getVisit);
+router.get('/visita_cliente/:codigo', checkToken, cadGetController.getVisitsByClient);
+router.get('/cliente_usuario/:codigo', checkToken, cadGetController.getClientsByUser);
 
 //POST
-router.post('/usuarios', cadPostController.postUser);
-router.post('/clientes', cadPostController.postClient);
-router.post('/visitas', cadPostController.postVisits);
+router.post('/usuarios', cadPostController.postUser); //Publico
+router.post('/clientes', checkToken, cadPostController.postClient);
+router.post('/visitas', checkToken, cadPostController.postVisits);
 
 //PUT
-router.put('/usuario/:codigo', cadPutController.putUser);
-router.put('/cliente/:codigo', cadPutController.putClient);
-router.put('/visita/:codigo', cadPutController.putVisit);
+router.put('/usuario/:codigo', checkToken, cadPutController.putUser);
+router.put('/cliente/:codigo', checkToken, cadPutController.putClient);
+router.put('/visita/:codigo', checkToken, cadPutController.putVisit);
 
 //DELETE
-router.delete('/usuario/:codigo', cadDeleteController.deleteUser);
-router.delete('/cliente/:codigo', cadDeleteController.deleteClient);
-router.delete('/visita/:codigo', cadDeleteController.deleteVisit);
+router.delete('/usuario/:codigo', checkToken, cadDeleteController.deleteUser);
+router.delete('/cliente/:codigo', checkToken, cadDeleteController.deleteClient);
+router.delete('/visita/:codigo', checkToken, cadDeleteController.deleteVisit);
 
 
 module.exports = router;

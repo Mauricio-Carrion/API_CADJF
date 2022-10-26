@@ -4,22 +4,27 @@ module.exports = {
   /**********GET************/
 
   //Busca um usuario
-  getUser: async (req, res) => {
+  getUser: async (userName) => {
     let result = {}
 
-    let userCode = req.params.codigo;
-    let user = await cadGetModel.getUserQuery(userCode);
+    let user = JSON.parse(JSON.stringify(await cadGetModel.getUserQuery(userName)));
 
     if (user) {
       result = user;
+      return result;
     }
-    res.json(result);
   },
 
   //Verifica se o usuario já existe
   getUserName: async (username) => {
     let user = await cadGetModel.getUserNameQuery(username);
     return user;
+  },
+
+  getPassword: async (username) => {
+    let password = await cadGetModel.getPasswordQuery(username);
+    let passwordObject = JSON.parse(JSON.stringify(password));
+    return passwordObject;
   },
 
   //Verifica se existe usuario
@@ -44,7 +49,6 @@ module.exports = {
       result.push({
         codigo: users[i].id_usu,
         login: users[i].usuario,
-        senha: users[i].senha,
         nome: users[i].nomusu,
         sobrenome: users[i].sobusu,
         administador: users[i].adm
@@ -57,12 +61,17 @@ module.exports = {
   getClient: async (req, res) => {
     let codigo = parseInt(req.params.codigo);
     if (codigo) {
+
       let client = await cadGetModel.getClientQuery(codigo);
 
       if (client) {
+
         res.status(200).json(client);
+
       } else {
+
         res.status(404).json({ msg: 'cliente não encontrado' });
+
       }
 
     } else {

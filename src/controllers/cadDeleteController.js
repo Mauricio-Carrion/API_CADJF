@@ -8,16 +8,25 @@ module.exports = {
 
     if (!(await cadGetController.getUserId(code))) {
 
-      res.status(404).json({ msg: 'Usuario não encontrado.' });
+      return res.status(404).json({ msg: 'Usuario não encontrado.' });
 
-    } else if (await cadGetController.getUserHasClient(code)) {
+    }
 
-      res.status(422).json({ msg: 'Usuário não pode ser excluido, possui clientes vinculados.' });
+    if (await cadGetController.getUserHasClient(code)) {
 
-    } else {
+      return res.status(422).json({ msg: 'Usuário não pode ser excluido, possui clientes vinculados.' });
+
+    }
+
+    try {
 
       await cadDeleteModel.deleteUserQuery(code);
-      res.status(200).json({ msg: 'Usuário excluido com sucesso!' })
+      res.status(200).json({ msg: 'Usuário excluido com sucesso!' });
+
+    } catch (error) {
+
+      console.log(error);
+      res.status(500).json({ msg: 'Ocorreu um problema no servidor, tente mais tarde.' });
 
     }
   },
@@ -28,16 +37,25 @@ module.exports = {
 
     if (!(await cadGetController.getClientId(code))) {
 
-      res.status(404).json({ msg: 'Cliente não encontrado.' });
+      return res.status(404).json({ msg: 'Cliente não encontrado.' });
 
-    } else if (await cadGetController.getClientHasVisit(code)) {
+    }
 
-      res.status(422).json({ msg: 'Cliente não pode ser excluido, possui visitas vinculadas.' });
+    if (await cadGetController.getClientHasVisit(code)) {
 
-    } else {
+      return res.status(422).json({ msg: 'Cliente não pode ser excluido, possui visitas vinculadas.' });
+
+    }
+
+    try {
 
       await cadDeleteModel.deleteClientQuery(code);
-      res.status(200).json({ msg: 'Cliente excluido com sucesso!' })
+      res.status(200).json({ msg: 'Cliente excluido com sucesso!' });
+
+    } catch (error) {
+
+      console.log(error);
+      res.status(500).json({ msg: 'Ocorreu um problema no servidor, tente mais tarde.' });
 
     }
   },
@@ -48,12 +66,19 @@ module.exports = {
 
     if (!(await cadGetController.getVisitId(code))) {
 
-      res.status(404).json({ msg: 'Visita não encontrada.' });
+      return res.status(404).json({ msg: 'Visita não encontrada.' });
 
-    } else {
+    }
+
+    try {
 
       await cadDeleteModel.deleteVisitQuery(code);
-      res.status(200).json({ msg: 'Visita excluida com sucesso!' })
+      res.status(200).json({ msg: 'Visita excluida com sucesso!' });
+
+    } catch (error) {
+
+      console.log(error);
+      res.status(500).json({ msg: 'Ocorreu um problema no servidor, tente mais tarde.' });
 
     }
   }

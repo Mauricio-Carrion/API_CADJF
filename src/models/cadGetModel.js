@@ -113,9 +113,9 @@ module.exports = {
     });
   },
 
-  getUserQuery: (userCode) => {
+  getUserQuery: (userName) => {
     return new Promise((resolve, reject) => {
-      db.query(`SELECT id_usu, usuario, senha, nomusu, sobusu, adm FROM cadusu WHERE id_usu = ${userCode}`,
+      db.query(`SELECT id_usu, usuario, senha, nomusu, sobusu, adm FROM cadusu WHERE usuario = '${userName}'`,
         (error, results) => {
           if (error) { return reject(error); }
 
@@ -139,6 +139,16 @@ module.exports = {
           } else {
             resolve(false);
           }
+        });
+    });
+  },
+
+  getPasswordQuery: (userName) => {
+    return new Promise((resolve, reject) => {
+      db.query(`SELECT senha FROM cadusu WHERE usuario = '${userName}'`,
+        (error, results) => {
+          if (error) { return reject(error); }
+          resolve(results);
         });
     });
   },
@@ -175,7 +185,7 @@ module.exports = {
 
   getAllUsersQuery: () => {
     return new Promise((resolve, reject) => {
-      db.query('SELECT id_usu, usuario, senha, nomusu, sobusu, adm FROM cadusu',
+      db.query('SELECT id_usu, usuario, nomusu, sobusu, adm FROM cadusu',
         (error, results) => {
           if (error) { return reject(error); }
           resolve(results);

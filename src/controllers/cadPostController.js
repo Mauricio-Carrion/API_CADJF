@@ -14,17 +14,44 @@ module.exports = {
 
     if (!usuario) {
 
-      res.status(422).json({ msg: 'Usuario é obrigatório' });
-
-    } else if (!senha) {
-
-      res.status(422).json({ msg: 'Senha é obrigatória' });
-
-    } else if (!(await cadGetController.getUserName(usuario))) {
-
-      res.status(422).json({ msg: 'Usuário não encontrado' });
+      return res.status(422).json({ msg: 'Usuario é obrigatório' });
 
     }
+
+    if (!senha) {
+
+      return res.status(422).json({ msg: 'Senha é obrigatória' });
+
+    }
+
+    if (!(await cadGetController.getUserName(usuario))) {
+
+      return res.status(404).json({ msg: 'Usuário não encontrado' });
+
+    }
+
+    const user = await cadGetController.getUser(usuario);
+
+    if (!(await bcrypt.compare(senha, user.senha))) {
+
+      return res.status(422).json({ msg: 'Senha inválida' });
+
+    }
+
+    try {
+
+      const secret = process.env.SECRET;
+      const token = jwt.sign({ id: user.id }, secret);
+
+      res.status(200).json({ msg: 'Autenticação efetuada com sucesso!', token });
+
+    } catch (error) {
+
+      console.log(error);
+      res.status(500).json({ msg: 'Ocorreu um erro no servidor, tente mais tarde!' });
+
+    }
+
   },
 
   /////////////Post usuario\\\\\\\\\\\\\\
@@ -51,38 +78,53 @@ module.exports = {
 
       res.status(422).json({ msg: 'Estão faltando campos.' });
 
-      //Verificar se o Usuario já possui cadastro
-    } else if (await cadGetController.getUserName(params[0])) {
+    }
 
-      res.status(404).json({ msg: 'O nome de usuário já possui cadastro.' });
+    //Verificar se o Usuario já possui cadastro
+    if (await cadGetController.getUserName(params[0])) {
 
-      //Valida Usuario
-    } else if (params[0].length > 15) {
+      return res.status(404).json({ msg: 'O nome de usuário já possui cadastro.' });
 
-      res.status(422).json({ msg: 'Use até 15 caracteres para o usuario.' });
 
-      //Valida Senha
-    } else if (params[1].length > 64) {
+    }
 
-      res.status(422).json({ msg: 'Use uma senha de até 64 caracteres' });
+    //Valida Usuario
+    if (params[0].length > 15) {
 
-      //Valida Nome
-    } else if (params[2].length > 30) {
+      return res.status(422).json({ msg: 'Use até 15 caracteres para o usuario.' });
 
-      res.status(422).json({ msg: 'Use até 30 caracteres para o nome.' });
+    }
 
-      //Valida Sobrenome
-    } else if (params[3].length > 30) {
+    //Valida Senha
+    if (params[1].length > 64) {
 
-      res.status(422).json({ msg: 'Use até 30 caracteres para o sobrenome.' });
+      return res.status(422).json({ msg: 'Use uma senha de até 64 caracteres' });
 
-      //Valida Adm
-    } else if (!(params[4] === 'true') && !(params[4] === 'false')) {
+    }
 
-      res.status(422).json({ msg: 'Use apenas booleano no campo adm.' });
+    //Valida Nome
+    if (params[2].length > 30) {
 
-      //Grava no banco se todos os testes foram false
-    } else {
+      return res.status(422).json({ msg: 'Use até 30 caracteres para o nome.' });
+
+    }
+
+    //Valida Sobrenome
+    if (params[3].length > 30) {
+
+      return res.status(422).json({ msg: 'Use até 30 caracteres para o sobrenome.' });
+
+    }
+
+    //Valida Adm
+    if (!(params[4] === 'true') && !(params[4] === 'false')) {
+
+      return res.status(422).json({ msg: 'Use apenas booleano no campo adm.' });
+
+    }
+
+    try {
+
       const salt = await bcrypt.genSalt(12);
       const passwordHash = await bcrypt.hash(params[1], salt);
       params[1] = passwordHash;
@@ -95,7 +137,16 @@ module.exports = {
         sobrenome: params[3],
         adm: params[4],
       });
+
+    } catch (error) {
+
+      console.log(error);
+      res.status(500).json({ msg: 'Ocorreu um erro no servidor, tente mais tarde!' });
+
     }
+    //Grava no banco se todos os testes foram false
+
+
   },
 
   /////////////Post cliente\\\\\\\\\\\\\\
@@ -121,45 +172,62 @@ module.exports = {
     //Verifica quantidade de campos preenchidos
     if (params.length < 6) {
 
-      res.status(422).json({ msg: 'Estão faltando campos.' });
+      return res.status(422).json({ msg: 'Estão faltando campos.' });
 
-      //Verifica verifica se o cnpj é um numero
-    } else if (!parseInt(params[3])) {
+    }
 
-      res.status(422).json({ msg: 'Insira um CNPJ válido.' });
+    //Verifica verifica se o cnpj é um numero
+    if (!parseInt(params[3])) {
 
-      //Verificar se o cliente já possui cadastro
-    } else if (await cadGetController.getClientCNPJ(params[3])) {
+      return res.status(422).json({ msg: 'Insira um CNPJ válido.' });
 
-      res.status(422).json({ msg: 'Cliente já possui cadastro.' });
+    }
 
-      //Valida nome
-    } else if (params[1].length > 50) {
+    //Verificar se o cliente já possui cadastro
+    if (await cadGetController.getClientCNPJ(params[3])) {
 
-      res.status(422).json({ msg: 'Use até 50 caracteres para o nome.' });
+      return res.status(422).json({ msg: 'Cliente já possui cadastro.' });
 
-      //Valida Razao social
-    } else if (params[2].length > 50) {
+    }
 
-      res.status(422).json({ msg: 'Use até 50 caracteres para a razão social.' });
+    //Valida nome
+    if (params[1].length > 50) {
 
-      //Valida CNPJ
-    } else if (params[3].length < 14 || params[3].length > 14) {
+      return res.status(422).json({ msg: 'Use até 50 caracteres para o nome.' });
 
-      res.status(422).json({ msg: 'Insira um CNPJ válido.' });
+    }
 
-      //Valida Observação
-    } else if (params[4].length > 150) {
+    //Valida Razao social
+    if (params[2].length > 50) {
 
-      res.status(422).json({ msg: 'Use até 150 caracteres para observação.' });
+      return res.status(422).json({ msg: 'Use até 50 caracteres para a razão social.' });
 
-      //Valida Status
-    } else if (params[5].length > 15) {
+    }
 
-      res.status(422).json({ msg: 'Use até 15 caracteres para o status.' });
+    //Valida CNPJ
+    if (params[3].length < 14 || params[3].length > 14) {
+
+      return res.status(422).json({ msg: 'Insira um CNPJ válido.' });
+
+    }
+
+    //Valida Observação
+    if (params[4].length > 150) {
+
+      return res.status(422).json({ msg: 'Use até 150 caracteres para observação.' });
+
+    }
+
+    //Valida Status
+    if (params[5].length > 15) {
+
+      return res.status(422).json({ msg: 'Use até 15 caracteres para o status.' });
+
+    }
+
+    try {
 
       //Grava no banco se todos os testes foram false
-    } else {
       let userCode = await cadPostModel.postClientQuery(params);
       res.status(200).json({
         codigo: userCode.insertId,
@@ -169,7 +237,14 @@ module.exports = {
         obs: params[4],
         status: params[5],
       });
+
+    } catch (error) {
+
+      console.log(error);
+      res.status(500).json({ msg: 'Ocorreu um erro no servidor, tente mais tarde!' });
+
     }
+
   },
 
   /////////////POST visitas\\\\\\\\\\\\\\\
@@ -191,40 +266,55 @@ module.exports = {
     //valida quantidade de parametros preenchidos
     if (params.length < 4) {
 
-      res.status(422).json({ msg: 'Estão faltando campos.' });
+      return res.status(422).json({ msg: 'Estão faltando campos.' });
 
-      //Verifica se o código do cliente é um numero
-    } else if (!parseInt(params[0])) {
+    }
 
-      res.status(422).json({ msg: 'Apenas números no campo cliente' });
+    //Verifica se o código do cliente é um numero
+    if (!parseInt(params[0])) {
 
-      //Verifica se o numero tem até 11 digitos
-    } else if (params[0].length > 11) {
+      return res.status(422).json({ msg: 'Apenas números no campo cliente' });
 
-      res.status(422).json({ msg: 'Insira até 11 dígitos no campo cliente' });
+    }
 
-      //Verifica se existe um cliente com o codigo informado
-    } else if (!(await cadGetController.getClientId(params[0]))) {
+    //Verifica se o numero tem até 11 digitos
+    if (params[0].length > 11) {
 
-      res.status(404).json({ msg: 'Cliente não encontrado' });
+      return res.status(422).json({ msg: 'Insira até 11 dígitos no campo cliente' });
 
-      //Verifica se a data está valida
-    } else if (new Date(params[1]) == 'Invalid Date') {
+    }
 
-      res.status(422).json({ msg: 'Insira uma data válida' });
+    //Verifica se existe um cliente com o codigo informado
+    if (!(await cadGetController.getClientId(params[0]))) {
 
-      //verifica descrição
-    } else if (params[2].length > 50) {
+      return res.status(404).json({ msg: 'Cliente não encontrado' });
 
-      res.status(422).json({ msg: 'Use até 50 caracteres para descrição.' });
+    }
 
-      //Verifica observação
-    } else if (params[3].length > 50) {
+    //Verifica se a data está valida
+    if (new Date(params[1]) == 'Invalid Date') {
 
-      res.status(422).json({ msg: 'Use até 150 caracteres para descrição.' });
+      return res.status(422).json({ msg: 'Insira uma data válida' });
+
+    }
+
+    //verifica descrição
+    if (params[2].length > 50) {
+
+      return res.status(422).json({ msg: 'Use até 50 caracteres para descrição.' });
+
+    }
+
+    //Verifica observação
+    if (params[3].length > 50) {
+
+      return res.status(422).json({ msg: 'Use até 150 caracteres para descrição.' });
+
+    }
+
+    try {
 
       //Grava no banco se todos os testes foram false
-    } else {
       let visitCode = await cadPostModel.postVisitQuery(params);
       res.status(200).json({
         codigo: visitCode.insertId,
@@ -233,6 +323,12 @@ module.exports = {
         descricao: params[3],
         obsevacao: params[4],
       });
+
+    } catch (error) {
+
+      console.log(error);
+      res.status(500).json({ msg: 'Ocorreu um erro no servidor, tente mais tarde!' });
+
     }
   }
 };
