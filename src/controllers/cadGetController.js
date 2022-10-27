@@ -63,10 +63,17 @@ module.exports = {
     if (codigo) {
 
       let client = await cadGetModel.getClientQuery(codigo);
-
+      console.log(client)
       if (client) {
 
-        res.status(200).json(client);
+        res.status(200).json({
+          codigo: `${client.id_cli}`,
+          nomeFantasia: `${client.nomfan}`,
+          razaoSocial: `${client.razcli}`,
+          cnpj: client.cnpj,
+          observacao: `${client.obscli}`,
+          status: `${client.stacli}`
+        });
 
       } else {
 
@@ -125,15 +132,27 @@ module.exports = {
     let visitCode = parseInt(req.params.codigo);
 
     if (visitCode) {
+
       let visit = await cadGetModel.getVisitQuery(visitCode);
 
       if (visit) {
-        res.status(200).json(visit);
+
+        res.status(200).json({
+          data: `${visit.datvis}`,
+          descricao: `${visit.desvis}`,
+          observacao: `${visit.obsvis}`
+        });
+
       } else {
+
         res.status(404).json({ msg: 'visita não encontrada' });
+
       }
+
     } else {
+
       res.status(422).json({ msg: 'insira um código válido' });
+
     }
   },
 
@@ -157,7 +176,16 @@ module.exports = {
         observacao: visits[i].obsvis
       });
     }
-    res.json(result);
+
+    if (result.length > 0) {
+
+      res.status(200).json(result);
+
+    } else {
+
+      res.status(404).json({ msg: 'Nenhuma visita encontrada.' });
+
+    }
   },
 
   // Busca visitas por cliente
@@ -165,6 +193,13 @@ module.exports = {
     let result = [];
 
     let clientCode = req.params.codigo;
+
+    if (!(await this.getClientId(clientCode))) {
+
+      return res.status(404).json({ msg: 'Cliente não tem cadastro.' });
+
+    }
+
     let visits = await cadGetModel.getVisitsByClientQuery(clientCode);
     if (visits) {
       for (let i in visits) {
@@ -176,7 +211,16 @@ module.exports = {
         });
       }
     }
-    res.json(result);
+
+    if (result.length > 0) {
+
+      return res.status(200).json(result);
+
+    } else {
+
+      return res.status(404).json({ msg: 'Cliente não possui visitas.' });
+
+    }
   },
 
   // Busca clientes por usuario
@@ -202,6 +246,15 @@ module.exports = {
         });
       }
     }
-    res.json(result);
+
+    if (result.length > 0) {
+
+      res.status(200).json(result);
+
+    } else {
+
+      res.status(404).json({ msg: 'Usuário não possui clientes.' });
+
+    }
   }
 };

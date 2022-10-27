@@ -10,7 +10,7 @@ module.exports = {
           if (error) { return reject(error); }
 
           if (results.length > 0) {
-            resolve(results[0]);
+            resolve(JSON.parse(JSON.stringify(results[0])));
           } else {
             resolve(false);
           }
@@ -80,7 +80,7 @@ module.exports = {
           if (error) { return reject(error); }
           console.log(results)
           if (results.length > 0) {
-            resolve(results[0]);
+            resolve(JSON.parse(JSON.stringify(results[0])));
           } else {
             resolve(false);
           }
@@ -105,7 +105,7 @@ module.exports = {
 
   getAllVisitsQuery: () => {
     return new Promise((resolve, reject) => {
-      db.query('SELECT datvis, desvis, obsvis FROM cadvis',
+      db.query('SELECT id_vis, datvis, desvis, obsvis FROM cadvis',
         (error, results) => {
           if (error) { return reject(error); }
           resolve(results);
@@ -195,7 +195,7 @@ module.exports = {
 
   getVisitsByClientQuery: (clientCode) => {
     return new Promise((resolve, reject) => {
-      db.query(`SELECT datvis, desvis, obsvis FROM cadvis WHERE cli_id = ${clientCode}`,
+      db.query(`SELECT id_vis, datvis, desvis, obsvis FROM cadvis WHERE cli_id = ${clientCode}`,
         (error, results) => {
           if (error) { return reject(error) }
           resolve(results);
