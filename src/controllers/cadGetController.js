@@ -194,7 +194,7 @@ module.exports = {
 
     let clientCode = req.params.codigo;
 
-    if (!(await this.getClientId(clientCode))) {
+    if (!(await cadGetModel.getClientIdQuery(clientCode))) {
 
       return res.status(404).json({ msg: 'Cliente não tem cadastro.' });
 
@@ -228,6 +228,13 @@ module.exports = {
     let result = [];
 
     let userCode = req.params.codigo;
+
+    if (!(await cadGetModel.getUserIdQuery(userCode))) {
+
+      return res.status(404).json({ msg: 'Cliente não tem cadastro.' });
+
+    }
+
     let clients = await cadGetModel.getClientsByUserQuery(userCode);
 
     if (clients) {
