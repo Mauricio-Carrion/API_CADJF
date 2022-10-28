@@ -32,6 +32,8 @@ module.exports = {
 
     const user = await cadGetController.getUser(usuario);
 
+    console.log(user)
+
     if (!(await bcrypt.compare(senha, user.senha))) {
 
       return res.status(422).json({ msg: 'Senha inválida' });
@@ -39,7 +41,7 @@ module.exports = {
     }
 
     try {
-      console.log(user)
+
       const secret = process.env.SECRET;
       const token = jwt.sign({ id: user.id_usu }, secret);
 
@@ -161,7 +163,7 @@ module.exports = {
       obscli = req.body.obs,
       stacli = req.body.status
     ];
-
+    console.log(tokenID)
     //Retorna apenas parametros preenchidos
     const params = reqParams.filter(e => {
       if (e) {
@@ -257,12 +259,14 @@ module.exports = {
       desc = req.body.descricao,
       obs = req.body.obs
     ];
+
     //Filtra parametros preenchidos
     const params = reqParams.filter(e => {
       if (e) {
         return e
       }
     });
+
     //valida quantidade de parametros preenchidos
     if (params.length < 4) {
 
@@ -318,10 +322,10 @@ module.exports = {
       let visitCode = await cadPostModel.postVisitQuery(params);
       res.status(200).json({
         codigo: visitCode.insertId,
-        cliente: params[1],
-        data: params[2],
-        descricao: params[3],
-        obsevacao: params[4],
+        cliente: params[0],
+        data: params[1],
+        descricao: params[2],
+        obsevacao: params[3],
       });
 
     } catch (error) {

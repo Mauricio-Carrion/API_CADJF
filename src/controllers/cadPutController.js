@@ -1,5 +1,8 @@
 const cadPutModel = require('../models/cadPutModel');
 const cadGetController = require('./cadGetController');
+const bcrypt = require('bcrypt');
+const { query } = require('express');
+const cadGetModel = require('../models/cadGetModel');
 
 module.exports = {
   ///////////PUT\\\\\\\\\\\
@@ -37,9 +40,12 @@ module.exports = {
     }
 
     //Verificar se o Usuario já possui cadastro
-    if (await cadGetController.getUserName(params[0])) {
 
-      return res.status(404).json({ msg: 'O nome de usuário já possui cadastro.' });
+    const idUsu = await cadGetController.getUser(params[0])
+
+    if (await cadGetController.getUserName(params[0]) && idUsu.id_usu != userCode) {
+
+      return res.status(404).json({ msg: 'O nome de usuário já está sendo usado.' });
 
     }
 
@@ -80,6 +86,10 @@ module.exports = {
 
     try {
       //Grava no banco se todos os testes foram false
+      const salt = await bcrypt.genSalt(12);
+      const passwordHash = await bcrypt.hash(params[1], salt);
+      params[1] = passwordHash;
+
       await cadPutModel.putUserQuery(userCode, params);
       res.status(200).json({
         codigo: userCode,
@@ -137,7 +147,10 @@ module.exports = {
     }
 
     //Verificar se o cliente já possui cadastro
-    if (await cadGetController.getClientCNPJ(params[3])) {
+
+    const compCode = await cadGetModel.getClientQuery(params[0])
+
+    if (await cadGetController.getClientCNPJ(params[3]) && compCode.cnpj == params[3]) {
 
       return res.status(422).json({ msg: 'Cliente já possui cadastro.' });
 
@@ -218,7 +231,7 @@ module.exports = {
       }
     });
 
-    if (!(cadGetController.getVisitId(visitCode))) {
+    if (!(await cadGetController.getVisitId(visitCode))) {
 
       return res.status(404).json({ msg: 'Visita não encontrada' });
 
@@ -264,16 +277,16 @@ module.exports = {
 
       return res.status(422).json({ msg: 'Use até 50 caracteres para descrição.' });
 
-      //Verifica observação
     }
 
+    //Verifica observação
     if (params[3].length > 50) {
 
       return res.status(422).json({ msg: 'Use até 150 caracteres para descrição.' });
 
-      //Grava no banco se todos os testes foram false
     }
 
+    //Grava no banco se todos os testes foram false
     try {
 
       await cadPutModel.putVisitQuery(visitCode, params);

@@ -120,7 +120,7 @@ module.exports = {
           if (error) { return reject(error); }
 
           if (results.length > 0) {
-            resolve(results[0]);
+            resolve(JSON.parse(JSON.stringify(results[0])));
           } else {
             resolve(false);
           }
@@ -148,7 +148,7 @@ module.exports = {
       db.query(`SELECT senha FROM cadusu WHERE usuario = '${userName}'`,
         (error, results) => {
           if (error) { return reject(error); }
-          resolve(results);
+          resolve(JSON.parse(JSON.stringify(results)));
         });
     });
   },

@@ -7,7 +7,7 @@ module.exports = {
   getUser: async (userName) => {
     let result = {}
 
-    let user = JSON.parse(JSON.stringify(await cadGetModel.getUserQuery(userName)));
+    let user = await cadGetModel.getUserQuery(userName);
 
     if (user) {
       result = user;
@@ -21,10 +21,10 @@ module.exports = {
     return user;
   },
 
+  //Verifica password
   getPassword: async (username) => {
     let password = await cadGetModel.getPasswordQuery(username);
-    let passwordObject = JSON.parse(JSON.stringify(password));
-    return passwordObject;
+    return password;
   },
 
   //Verifica se existe usuario
@@ -45,25 +45,36 @@ module.exports = {
 
     let users = await cadGetModel.getAllUsersQuery();
 
-    for (let i in users) {
-      result.push({
-        codigo: users[i].id_usu,
-        login: users[i].usuario,
-        nome: users[i].nomusu,
-        sobrenome: users[i].sobusu,
-        administador: users[i].adm
-      });
+    if (users.length > 0) {
+
+      for (let i in users) {
+        result.push({
+          codigo: users[i].id_usu,
+          login: users[i].usuario,
+          nome: users[i].nomusu,
+          sobrenome: users[i].sobusu,
+          administador: users[i].adm
+        });
+      }
+
+      return res.status(200).json(result);
+
+    } else {
+
+      return res.status(404).json({ msg: 'Ainda não há usuarios cadastrados.' });
+
     }
-    res.json(result);
   },
 
   //Busca um cliente
   getClient: async (req, res) => {
+
     let codigo = parseInt(req.params.codigo);
+
     if (codigo) {
 
       let client = await cadGetModel.getClientQuery(codigo);
-      console.log(client)
+
       if (client) {
 
         res.status(200).json({
@@ -77,12 +88,14 @@ module.exports = {
 
       } else {
 
-        res.status(404).json({ msg: 'cliente não encontrado' });
+        res.status(404).json({ msg: 'Cliente não encontrado' });
 
       }
 
     } else {
-      res.status(422).json({ msg: 'insira um código válido' });
+
+      res.status(422).json({ msg: 'Insira um código válido' });
+
     }
   },
 
@@ -110,21 +123,30 @@ module.exports = {
 
     let clients = await cadGetModel.getAllClientsQuery();
 
-    for (let i in clients) {
-      result.push({
-        codigo: clients[i].id_cli,
-        nome: clients[i].nomfan,
-        razaoSocial: clients[i].razcli,
-        cnpj: clients[i].cnpj,
-        endereco: clients[i].endcli,
-        numero: clients[i].numend,
-        cidade: clients[i].cidend,
-        bairro: clients[i].baiend,
-        obs: clients[i].obscli,
-        status: clients[i].stacli
-      });
+    if (clients.length > 0) {
+
+      for (let i in clients) {
+        result.push({
+          codigo: clients[i].id_cli,
+          nome: clients[i].nomfan,
+          razaoSocial: clients[i].razcli,
+          cnpj: clients[i].cnpj,
+          endereco: clients[i].endcli,
+          numero: clients[i].numend,
+          cidade: clients[i].cidend,
+          bairro: clients[i].baiend,
+          obs: clients[i].obscli,
+          status: clients[i].stacli
+        });
+      }
+
+      return res.status(200).json(result);
+
+    } else {
+
+      return res.status(404).json({ msg: 'Ainda não há clientes cadastrados.' });
+
     }
-    res.json(result);
   },
 
   // Busca uma visita
@@ -167,7 +189,7 @@ module.exports = {
     let result = [];
 
     let visits = await cadGetModel.getAllVisitsQuery();
-
+    console.log(visits[1])
     for (let i in visits) {
       result.push({
         codigo: visits[i].id_vis,
@@ -231,7 +253,7 @@ module.exports = {
 
     if (!(await cadGetModel.getUserIdQuery(userCode))) {
 
-      return res.status(404).json({ msg: 'Cliente não tem cadastro.' });
+      return res.status(404).json({ msg: 'Usuario não tem cadastro.' });
 
     }
 
