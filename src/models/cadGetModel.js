@@ -168,6 +168,16 @@ module.exports = {
     });
   },
 
+  getUserNameById: (id) => {
+    return new Promise((resolve, reject) => {
+      db.query(`SELECT usuario FROM cadusu WHERE id_usu = ${id}`,
+        (error, results) => {
+          if (error) { return reject(error); }
+          resolve(JSON.parse(JSON.stringify(results)));
+        })
+    })
+  },
+
   getUserHasClientQuery: (codeUser) => {
     return new Promise((resolve, reject) => {
       db.query(`SELECT usu_id FROM cadcli WHERE usu_id = ${codeUser}`,

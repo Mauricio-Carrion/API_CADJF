@@ -33,9 +33,9 @@ module.exports = {
     });
   },
 
-  postLogDelete: (action, user) => {
+  postLogDelete: (action, code, where, user) => {
     return new Promise((resolve, reject) => {
-      db.query(`INSERT INTO cadlog VALUES(null,'${action}','${user}', NOW())`,
+      db.query(`INSERT INTO cadlog VALUES(null,'${action}','Usuário ${user}. Exclusão de ${where}. Código ${code}', NOW())`,
         (error, results) => {
           if (error) { return reject(error); }
           resolve(results);

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { checkToken } = require('./middlewares/authMiddleware');
+const { checkToken, checkAdmin } = require('./middlewares/authMiddleware');
 
 const cadGetController = require('./controllers/cadGetController');
 const cadPostController = require('./controllers/cadPostController');
@@ -31,9 +31,9 @@ router.put('/cliente/:codigo', checkToken, cadPutController.putClient);
 router.put('/visita/:codigo', checkToken, cadPutController.putVisit);
 
 //DELETE
-router.delete('/usuario/:codigo', checkToken, cadDeleteController.deleteUser);
-router.delete('/cliente/:codigo', checkToken, cadDeleteController.deleteClient);
-router.delete('/visita/:codigo', checkToken, cadDeleteController.deleteVisit);
+router.delete('/usuario/:codigo', checkToken, checkAdmin, cadDeleteController.deleteUser);
+router.delete('/cliente/:codigo', checkToken, checkAdmin, cadDeleteController.deleteClient);
+router.delete('/visita/:codigo', checkToken, checkAdmin, cadDeleteController.deleteVisit);
 
 
 module.exports = router;

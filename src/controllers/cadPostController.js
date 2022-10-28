@@ -335,16 +335,4 @@ module.exports = {
 
     }
   },
-
-  postLog: async (action, user) => {
-    switch (action) {
-      case action == 'Delete':
-        await cadPostModel.postLogDelete(action, user);
-        break;
-
-      case action == 'Update':
-        await cadPostModel.postLogUpdate(action, user);
-        break;
-    }
-  }
 };

@@ -2,6 +2,8 @@ const cadDeleteModel = require('../models/cadDeleteModel');
 const cadGetController = require('./cadGetController');
 const cadPostController = require('./cadPostController');
 const jwt = require('jsonwebtoken');
+const cadPostModel = require('../models/cadPostModel');
+const cadGetModel = require('../models/cadGetModel');
 
 module.exports = {
   //Deleta Usuario
@@ -21,8 +23,15 @@ module.exports = {
     }
 
     try {
+      const authHeader = req.headers['authorization'];
+      const token = authHeader && authHeader.split(' ')[1];
+      const secret = process.env.SECRET;
+      const tokenID = await jwt.verify(token, secret).id;
+      const userName = await cadGetModel.getUserNameById(tokenID);
 
+      await cadPostModel.postLogDelete('Delete', code, 'Usuario', userName[0].usuario);
       await cadDeleteModel.deleteUserQuery(code);
+
       res.status(200).json({ msg: 'Usuário excluido com sucesso!' });
 
     } catch (error) {
@@ -54,9 +63,11 @@ module.exports = {
       const token = authHeader && authHeader.split(' ')[1];
       const secret = process.env.SECRET;
       const tokenID = await jwt.verify(token, secret).id;
+      const userName = await cadGetModel.getUserNameById(tokenID);
 
-      await cadPostController.postLog('Delete', tokenID);
+      await cadPostModel.postLogDelete('Delete', code, 'Cliente', userName[0].usuario);
       await cadDeleteModel.deleteClientQuery(code);
+
       res.status(200).json({ msg: 'Cliente excluido com sucesso!' });
 
     } catch (error) {
@@ -82,9 +93,11 @@ module.exports = {
       const token = authHeader && authHeader.split(' ')[1];
       const secret = process.env.SECRET;
       const tokenID = await jwt.verify(token, secret).id;
+      const userName = await cadGetModel.getUserNameById(tokenID);
 
-      await cadPostController.postLog('Delete', tokenID);
+      await cadPostModel.postLogDelete('Delete', code, 'Visita', userName[0].usuario);
       await cadDeleteModel.deleteVisitQuery(code);
+
       res.status(200).json({ msg: 'Visita excluida com sucesso!' });
 
     } catch (error) {
