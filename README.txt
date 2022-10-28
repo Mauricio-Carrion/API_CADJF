@@ -39,7 +39,6 @@ GET URL:3087/cliente_usuario/:codigo
 
 POST URL:3087/clientes
 
-usuario
 nome
 razao
 cnpj

@@ -128,7 +128,7 @@ module.exports = {
 
     if (!(await cadGetController.getClientId(clientCode))) {
 
-      res.status(404).json({ msg: 'Cliente não encontrado.' });
+      return res.status(404).json({ msg: 'Cliente não encontrado.' });
 
     }
 
