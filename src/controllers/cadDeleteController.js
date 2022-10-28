@@ -1,5 +1,7 @@
 const cadDeleteModel = require('../models/cadDeleteModel');
 const cadGetController = require('./cadGetController');
+const cadPostController = require('./cadPostController');
+const jwt = require('jsonwebtoken');
 
 module.exports = {
   //Deleta Usuario
@@ -48,7 +50,12 @@ module.exports = {
     }
 
     try {
+      const authHeader = req.headers['authorization'];
+      const token = authHeader && authHeader.split(' ')[1];
+      const secret = process.env.SECRET;
+      const tokenID = await jwt.verify(token, secret).id;
 
+      await cadPostController.postLog('Delete', tokenID);
       await cadDeleteModel.deleteClientQuery(code);
       res.status(200).json({ msg: 'Cliente excluido com sucesso!' });
 
@@ -71,7 +78,12 @@ module.exports = {
     }
 
     try {
+      const authHeader = req.headers['authorization'];
+      const token = authHeader && authHeader.split(' ')[1];
+      const secret = process.env.SECRET;
+      const tokenID = await jwt.verify(token, secret).id;
 
+      await cadPostController.postLog('Delete', tokenID);
       await cadDeleteModel.deleteVisitQuery(code);
       res.status(200).json({ msg: 'Visita excluida com sucesso!' });
 

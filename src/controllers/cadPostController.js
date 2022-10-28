@@ -334,5 +334,17 @@ module.exports = {
       res.status(500).json({ msg: 'Ocorreu um erro no servidor, tente mais tarde!' });
 
     }
+  },
+
+  postLog: async (action, user) => {
+    switch (action) {
+      case action == 'Delete':
+        await cadPostModel.postLogDelete(action, user);
+        break;
+
+      case action == 'Update':
+        await cadPostModel.postLogUpdate(action, user);
+        break;
+    }
   }
 };

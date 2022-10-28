@@ -31,5 +31,15 @@ module.exports = {
           resolve(results);
         });
     });
+  },
+
+  postLogDelete: (action, user) => {
+    return new Promise((resolve, reject) => {
+      db.query(`INSERT INTO cadlog VALUES(null,'${action}','${user}', NOW())`,
+        (error, results) => {
+          if (error) { return reject(error); }
+          resolve(results);
+        });
+    });
   }
 };
