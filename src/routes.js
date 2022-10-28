@@ -20,6 +20,7 @@ router.get('/visitas', checkToken, checkUserToken, cadGetController.getAllVisits
 router.get('/visita/:codigo', checkToken, checkUserToken, cadGetController.getVisit);
 router.get('/visita_cliente/:codigo', checkToken, checkUserToken, cadGetController.getVisitsByClient);
 router.get('/cliente_usuario/:codigo', checkToken, checkUserToken, cadGetController.getClientsByUser);
+router.get('/logs', checkToken, checkUserToken, cadGetController.getLogs);
 
 //POST
 router.post('/clientes', checkToken, checkUserToken, cadPostController.postClient);

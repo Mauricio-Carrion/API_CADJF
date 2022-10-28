@@ -32,8 +32,6 @@ module.exports = {
 
     const user = await cadGetController.getUser(usuario);
 
-    console.log(user)
-
     if (!(await bcrypt.compare(senha, user.senha))) {
 
       return res.status(422).json({ msg: 'Senha inválida' });
@@ -163,7 +161,7 @@ module.exports = {
       obscli = req.body.obs,
       stacli = req.body.status
     ];
-    console.log(tokenID)
+
     //Retorna apenas parametros preenchidos
     const params = reqParams.filter(e => {
       if (e) {

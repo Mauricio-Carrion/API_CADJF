@@ -222,4 +222,18 @@ module.exports = {
         });
     });
   },
+
+  getLogsQuery: () => {
+    return new Promise((resolve, reject) => {
+      db.query('SELECT id_log, tiplog, usulog, datlog FROM cadlog',
+        (error, results) => {
+          if (error) { return reject(error); }
+          if (results.length > 0) {
+            resolve(results);
+          } else {
+            resolve(false);
+          }
+        });
+    });
+  }
 };

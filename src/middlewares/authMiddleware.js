@@ -48,7 +48,7 @@ module.exports = {
 
     if (!(await cadGetController.getUserId(tokenId))) {
 
-      res.status(422).json({ msg: 'Token referente a um cliente inexistente, faça login com outro usuário' });
+      res.status(422).json({ msg: 'Token referente a um usuário inexistente, faça login com outro usuário' });
 
     } else {
 

@@ -205,7 +205,7 @@ module.exports = {
 
     } else {
 
-      res.status(404).json({ msg: 'Nenhuma visita encontrada.' });
+      res.status(404).json({ msg: 'Ainda não há visitas cadastradas.' });
 
     }
   },
@@ -283,6 +283,31 @@ module.exports = {
     } else {
 
       res.status(404).json({ msg: 'Usuário não possui clientes.' });
+
+    }
+  },
+
+  getLogs: async (req, res) => {
+    let result = [];
+
+    let logs = await cadGetModel.getLogsQuery();
+
+    for (let i in logs) {
+      result.push({
+        codigo: logs[i].id_log,
+        tipo: logs[i].tiplog,
+        descricao: logs[i].usulog,
+        data: logs[i].datlog
+      });
+    }
+
+    if (result.length > 0) {
+
+      res.status(200).json(result);
+
+    } else {
+
+      res.status(404).json({ msg: 'Ainda não há logs' });
 
     }
   }
