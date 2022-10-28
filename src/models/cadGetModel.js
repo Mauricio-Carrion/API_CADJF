@@ -78,7 +78,7 @@ module.exports = {
       db.query(`SELECT datvis, desvis, obsvis FROM cadvis WHERE id_vis = ${visitCode}`,
         (error, results) => {
           if (error) { return reject(error); }
-          console.log(results)
+
           if (results.length > 0) {
             resolve(JSON.parse(JSON.stringify(results[0])));
           } else {

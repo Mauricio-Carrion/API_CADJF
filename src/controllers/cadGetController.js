@@ -189,7 +189,7 @@ module.exports = {
     let result = [];
 
     let visits = await cadGetModel.getAllVisitsQuery();
-    console.log(visits[1])
+
     for (let i in visits) {
       result.push({
         codigo: visits[i].id_vis,

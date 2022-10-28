@@ -126,6 +126,7 @@ module.exports = {
       }
     });
 
+    //Verifica usuario informado
     if (!(await cadGetController.getClientId(clientCode))) {
 
       return res.status(404).json({ msg: 'Cliente não encontrado.' });
@@ -139,6 +140,12 @@ module.exports = {
 
     }
 
+    if (!(await cadGetController.getUserId(params[0]))) {
+
+      return res.status(422).json({ msg: 'Usuário não encontrado' });
+
+    }
+
     //Verifica verifica se o cnpj é um numero
     if (!parseInt(params[3])) {
 
@@ -148,9 +155,9 @@ module.exports = {
 
     //Verificar se o cliente já possui cadastro
 
-    const compCode = await cadGetModel.getClientQuery(params[0])
+    const compCode = await cadGetModel.getClientQuery(clientCode)
 
-    if (await cadGetController.getClientCNPJ(params[3]) && compCode.cnpj == params[3]) {
+    if (await cadGetController.getClientCNPJ(params[3]) && !(compCode.cnpj == params[3])) {
 
       return res.status(422).json({ msg: 'Cliente já possui cadastro.' });
 

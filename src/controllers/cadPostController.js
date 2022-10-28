@@ -43,7 +43,7 @@ module.exports = {
     try {
 
       const secret = process.env.SECRET;
-      const token = jwt.sign({ id: user.id_usu }, secret);
+      const token = jwt.sign({ id: user.id_usu, adm: user.adm }, secret);
 
       res.status(200).json({ msg: 'Autenticação efetuada com sucesso!', token });
 
