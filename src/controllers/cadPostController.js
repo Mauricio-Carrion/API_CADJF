@@ -26,7 +26,7 @@ module.exports = {
 
     if (!(await cadGetController.getUserName(usuario))) {
 
-      return res.status(404).json({ msg: 'Usuário não encontrado' });
+      return res.status(404).json({ msg: 'Usuário não encontrado, efetue seu cadastro.' });
 
     }
 
@@ -48,7 +48,7 @@ module.exports = {
         expiresIn: '1h'
       });
 
-      res.status(200).json({ msg: 'Autenticação efetuada com sucesso!', token });
+      res.status(200).json({ msg: 'Autenticação efetuada com sucesso!', token, codigo: user.id_usu, usuario: user.usuario });
 
     } catch (error) {
 
