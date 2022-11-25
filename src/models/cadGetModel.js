@@ -195,7 +195,7 @@ module.exports = {
 
   getAllUsersQuery: () => {
     return new Promise((resolve, reject) => {
-      db.query('SELECT id_usu, usuario, nomusu, sobusu, adm FROM cadusu',
+      db.query('SELECT id_usu, image ,usuario, nomusu, sobusu, adm FROM cadusu',
         (error, results) => {
           if (error) { return reject(error); }
           resolve(results);

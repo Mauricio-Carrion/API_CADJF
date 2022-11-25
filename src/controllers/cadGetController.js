@@ -50,6 +50,7 @@ module.exports = {
       for (let i in users) {
         result.push({
           codigo: users[i].id_usu,
+          imagem: users[i].image,
           login: users[i].usuario,
           nome: users[i].nomusu,
           sobrenome: users[i].sobusu,
