@@ -2,6 +2,7 @@ const cadPostModel = require('../models/cadPostModel');
 const cadGetController = require('./cadGetController');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const { unconvertImage } = require('../utils/utils')
 
 module.exports = {
   /**********POST************/
@@ -48,7 +49,7 @@ module.exports = {
         expiresIn: '1h'
       });
 
-      res.status(200).json({ msg: 'Autenticação efetuada com sucesso!', token, codigo: user.id_usu, usuario: user.nomusu, sobrenome: user.sobusu });
+      res.status(200).json({ msg: 'Autenticação efetuada com sucesso!', token, codigo: user.id_usu, imagem: unconvertImage(user.image), usuario: user.nomusu, sobrenome: user.sobusu });
 
     } catch (error) {
 

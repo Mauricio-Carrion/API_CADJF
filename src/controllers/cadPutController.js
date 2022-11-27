@@ -3,7 +3,7 @@ const cadGetController = require('./cadGetController');
 const bcrypt = require('bcrypt');
 const { query } = require('express');
 const cadGetModel = require('../models/cadGetModel');
-const convertImage = require('../utils/utils')
+const { convertImage } = require('../utils/utils')
 
 module.exports = {
   ///////////PUT\\\\\\\\\\\
@@ -20,8 +20,6 @@ module.exports = {
       sobre = req.body.sobrenome,
       adm = req.body.adm
     ];
-
-    console.log(reqParams)
 
     const params = reqParams.filter(e => e)
 

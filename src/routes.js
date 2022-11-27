@@ -27,9 +27,9 @@ router.post('/clientes', checkToken, checkUserToken, cadPostController.postClien
 router.post('/visitas', checkToken, checkUserToken, cadPostController.postVisits);
 
 //PUT
-router.put('/usuario/:codigo', checkToken, checkUserToken, cadPutController.putUser);
-router.put('/cliente/:codigo', checkToken, checkUserToken, cadPutController.putClient);
-router.put('/visita/:codigo', checkToken, checkUserToken, cadPutController.putVisit);
+router.put('/usuario/:codigo', checkToken, checkUserToken, checkAdmin, cadPutController.putUser);
+router.put('/cliente/:codigo', checkToken, checkUserToken, checkAdmin, cadPutController.putClient);
+router.put('/visita/:codigo', checkToken, checkUserToken, checkAdmin, cadPutController.putVisit);
 
 //DELETE
 router.delete('/usuario/:codigo', checkToken, checkUserToken, checkAdmin, cadDeleteController.deleteUser);
