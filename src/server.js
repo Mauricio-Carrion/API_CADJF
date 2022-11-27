@@ -10,7 +10,7 @@ const server = express();
 // const interface = network.lo[0].address
 
 server.use(cors());
-server.use(bodyParser.json());
+server.use(bodyParser.json({ limit: '10mb' }));
 server.use(bodyParser.urlencoded({ extended: false }));
 
 server.get('/', (req, res) => {

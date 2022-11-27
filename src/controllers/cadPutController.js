@@ -3,6 +3,7 @@ const cadGetController = require('./cadGetController');
 const bcrypt = require('bcrypt');
 const { query } = require('express');
 const cadGetModel = require('../models/cadGetModel');
+const convertImage = require('../utils/utils')
 
 module.exports = {
   ///////////PUT\\\\\\\\\\\
@@ -12,6 +13,7 @@ module.exports = {
     let userCode = req.params.codigo;
 
     const reqParams = [
+      imagem = convertImage(req.body.imagem),
       usuario = req.body.usuario.toUpperCase(),
       senha = req.body.senha,
       nome = req.body.nome,
@@ -19,11 +21,9 @@ module.exports = {
       adm = req.body.adm
     ];
 
-    const params = reqParams.filter(e => {
-      if (e) {
-        return e;
-      }
-    })
+    console.log(reqParams)
+
+    const params = reqParams.filter(e => e)
 
     //Verifica se existe usuario com o codigo passado no parametro
     if (!(await cadGetController.getUserId(userCode))) {
@@ -33,52 +33,53 @@ module.exports = {
     }
 
     //Verifica quantidade de campos preenchidos
-    if (params.length < 5) {
+    if (params.length < 6) {
 
       return res.status(422).json({ msg: 'Estão faltando campos.' });
 
     }
 
+
     //Verificar se o Usuario já possui cadastro
 
-    const idUsu = await cadGetController.getUser(params[0])
+    const idUsu = await cadGetController.getUser(params[1])
 
-    if (await cadGetController.getUserName(params[0]) && idUsu.id_usu != userCode) {
+    if (await cadGetController.getUserName(params[1]) && idUsu.id_usu != userCode) {
 
       return res.status(404).json({ msg: 'O nome de usuário já está sendo usado.' });
 
     }
 
     //Valida Usuario
-    if (params[0].length > 15) {
+    if (params[1].length > 15) {
 
       return res.status(422).json({ msg: 'Use até 15 caracteres para o usuario.' });
 
     }
 
     //Valida Senha
-    if (params[1].length > 64) {
+    if (params[2].length > 64) {
 
       return res.status(422).json({ msg: 'Use uma senha de até 64 caracteres' });
 
     }
 
     //Valida Nome
-    if (params[2].length > 30) {
+    if (params[3].length > 30) {
 
       return res.status(422).json({ msg: 'Use até 30 caracteres para o nome.' });
 
     }
 
     //Valida Sobrenome
-    if (params[3].length > 30) {
+    if (params[4].length > 30) {
 
       return res.status(422).json({ msg: 'Use até 30 caracteres para o sobrenome.' });
 
     }
 
     //Valida Adm
-    if (!(params[4] === 'true') && !(params[4] === 'false')) {
+    if (!(params[5] === 'true') && !(params[5] === 'false')) {
 
       return res.status(422).json({ msg: 'Use apenas booleano no campo adm.' });
 
@@ -87,16 +88,16 @@ module.exports = {
     try {
       //Grava no banco se todos os testes foram false
       const salt = await bcrypt.genSalt(12);
-      const passwordHash = await bcrypt.hash(params[1], salt);
-      params[1] = passwordHash;
+      const passwordHash = await bcrypt.hash(params[2], salt);
+      params[2] = passwordHash;
 
       await cadPutModel.putUserQuery(userCode, params);
       res.status(200).json({
         codigo: userCode,
-        usuario: params[0],
-        nome: params[2],
-        sobrenome: params[3],
-        adm: params[4],
+        usuario: params[1],
+        nome: params[3],
+        sobrenome: params[4],
+        adm: params[5],
       });
 
     } catch (error) {

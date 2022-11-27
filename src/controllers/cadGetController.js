@@ -1,4 +1,5 @@
 const cadGetModel = require('../models/cadGetModel');
+const convertImage = require('../utils/utils')
 
 module.exports = {
   /**********GET************/
@@ -50,7 +51,7 @@ module.exports = {
       for (let i in users) {
         result.push({
           codigo: users[i].id_usu,
-          imagem: users[i].image,
+          imagem: convertImage(users[i].image),
           login: users[i].usuario,
           nome: users[i].nomusu,
           sobrenome: users[i].sobusu,
