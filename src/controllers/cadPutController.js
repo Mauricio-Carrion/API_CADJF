@@ -22,7 +22,6 @@ module.exports = {
     ];
 
     const params = reqParams.filter(e => e)
-    console.log(params[0].byteLength)
     //Verifica se existe usuario com o codigo passado no parametro
     if (!(await cadGetController.getUserId(userCode))) {
 
@@ -36,11 +35,6 @@ module.exports = {
       return res.status(422).json({ msg: 'Estão faltando campos.' });
 
     }
-
-    //Verifica tamanho imagem
-
-
-
 
     //Verificar se o Usuario já possui cadastro
 

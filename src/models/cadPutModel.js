@@ -4,19 +4,19 @@ module.exports = {
   putUserQuery: (code, params) => {
     return new Promise((resolve, reject) => {
 
-      db.query(`UPDATE cadusu SET image='${params[0]}', usuario = '${params[1]}', senha = '${params[2]}', nomusu = '${params[3]}', sobusu = '${params[4]}', adm = ${params[5]} WHERE id_usu = ${code}`,
-        (error, results) => {
-          if (error) { return reject(error) }
-          resolve(results);
-        });
-
-      // else {
-      //   db.query(`UPDATE cadusu SET image=null, usuario = '${params[0]}', senha = '${params[1]}', nomusu = '${params[2]}', sobusu = '${params[3]}', adm = ${params[4]} WHERE id_usu = ${code}`,
-      //     (error, results) => {
-      //       if (error) { return reject(error) }
-      //       resolve(results);
-      //     });
-      // }
+      if (params[0] === 'null') {
+        db.query(`UPDATE cadusu SET image = null, usuario = '${params[1]}', senha = '${params[2]}', nomusu = '${params[3]}', sobusu = '${params[4]}', adm = ${params[5]} WHERE id_usu = ${code}`,
+          (error, results) => {
+            if (error) { return reject(error) }
+            resolve(results);
+          });
+      } else {
+        db.query(`UPDATE cadusu SET image ='${params[0]}', usuario = '${params[1]}', senha = '${params[2]}', nomusu = '${params[3]}', sobusu = '${params[4]}', adm = ${params[5]} WHERE id_usu = ${code}`,
+          (error, results) => {
+            if (error) { return reject(error) }
+            resolve(results);
+          });
+      }
     });
   },
 

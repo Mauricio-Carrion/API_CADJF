@@ -1,7 +1,10 @@
 const convertImage = (image) => {
-  const imageHex = image.split(',')[1]
-  const buffer = Buffer.from(imageHex, 'binary')
-  return buffer
+  if (image !== 'null') {
+    const imageHex = image.split(',')[1]
+    const buffer = Buffer.from(imageHex, 'binary')
+    return buffer
+  }
+  return image
 }
 
 const unconvertImage = (binary) => {
