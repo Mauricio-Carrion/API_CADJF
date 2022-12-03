@@ -65,7 +65,7 @@ module.exports = {
 
   getAllClientsQuery: () => {
     return new Promise((resolve, reject) => {
-      db.query('SELECT id_cli, nomfan, razcli, cnpj, obscli, stacli  FROM cadcli',
+      db.query('SELECT id_cli, usu_id ,nomfan, razcli, cnpj, obscli, stacli  FROM cadcli',
         (error, results) => {
           if (error) { return reject(error); }
           resolve(results);
