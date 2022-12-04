@@ -5,7 +5,7 @@ module.exports = {
   //GET Query's
   getClientQuery: (code) => {
     return new Promise((resolve, reject) => {
-      db.query(`SELECT id_cli, nomfan, razcli, cnpj, obscli, stacli  FROM cadcli WHERE id_cli = ${code}`,
+      db.query(`SELECT id_cli, usu_id, nomfan, razcli, cnpj, obscli, stacli  FROM cadcli WHERE id_cli = ${code}`,
         (error, results) => {
           if (error) { return reject(error); }
 
@@ -65,7 +65,7 @@ module.exports = {
 
   getAllClientsQuery: () => {
     return new Promise((resolve, reject) => {
-      db.query('SELECT cadusu.nomusu, cadcli.id_cli, cadcli.usu_id ,cadcli.nomfan, cadcli.razcli, cadcli.cnpj, cadcli.obscli, cadcli.stacli FROM cadusu INNER JOIN cadcli ON cadusu.id_usu = cadcli.usu_id',
+      db.query('SELECT cadusu.id_usu, cadusu.nomusu, cadcli.id_cli, cadcli.usu_id ,cadcli.nomfan, cadcli.razcli, cadcli.cnpj, cadcli.obscli, cadcli.stacli FROM cadusu INNER JOIN cadcli ON cadusu.id_usu = cadcli.usu_id',
         (error, results) => {
           if (error) { return reject(error); }
           resolve(results);

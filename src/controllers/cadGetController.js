@@ -80,6 +80,7 @@ module.exports = {
       if (client) {
 
         res.status(200).json({
+          tecnico: `${client.usu_id}`,
           codigo: `${client.id_cli}`,
           nomeFantasia: `${client.nomfan}`,
           razaoSocial: `${client.razcli}`,
