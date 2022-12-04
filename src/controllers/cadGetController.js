@@ -130,7 +130,7 @@ module.exports = {
       for (let i in clients) {
         result.push({
           codigo: clients[i].id_cli,
-          tecnico: clients[i].usu_id,
+          tecnico: clients[i].nomusu,
           nome: clients[i].nomfan,
           razaoSocial: clients[i].razcli,
           cnpj: clients[i].cnpj,
