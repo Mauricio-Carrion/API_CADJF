@@ -225,9 +225,9 @@ module.exports = {
     }
 
     //Valida Status
-    if (params[5].length > 15) {
+    if (params[5].length > 1) {
 
-      return res.status(422).json({ msg: 'Use até 15 caracteres para o status.' });
+      return res.status(422).json({ msg: 'Use 1 , 2 ou 3 para o status' });
 
     }
 
