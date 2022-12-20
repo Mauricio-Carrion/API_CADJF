@@ -222,7 +222,6 @@ module.exports = {
     let visitCode = req.params.codigo;
 
     const reqParams = [
-      cliente = req.body.cliente,
       data = req.body.data,
       desc = req.body.descricao,
       obs = req.body.obs
@@ -242,49 +241,28 @@ module.exports = {
     }
 
     //Valida quantidade de parametros preenchidos
-    if (params.length < 4) {
+    if (params.length < 3) {
 
       return res.status(422).json({ msg: 'Estão faltando campos.' });
 
     }
 
-    //Verifica se o código do cliente é um numero
-    if (!parseInt(params[0])) {
-
-      return res.status(422).json({ msg: 'Apenas números no campo cliente' });
-
-    }
-
-    //Verifica se o numero tem até 11 digitos
-    if (params[0].length > 11) {
-
-      return res.status(422).json({ msg: 'Insira até 11 dígitos no campo cliente' });
-
-    }
-
-    //Verifica se existe um cliente com o codigo informado
-    if (!(await cadGetController.getClientId(params[0]))) {
-
-      return res.status(404).json({ msg: 'Cliente não encontrado' });
-
-    }
-
     //Verifica se a data está valida
-    if (new Date(params[1]) == 'Invalid Date') {
+    if (new Date(params[0]) == 'Invalid Date') {
 
       return res.status(422).json({ msg: 'Insira uma data válida' });
 
     }
 
     //verifica descrição
-    if (params[2].length > 50) {
+    if (params[1].length > 50) {
 
       return res.status(422).json({ msg: 'Use até 50 caracteres para descrição.' });
 
     }
 
     //Verifica observação
-    if (params[3].length > 50) {
+    if (params[2].length > 50) {
 
       return res.status(422).json({ msg: 'Use até 150 caracteres para descrição.' });
 
@@ -295,16 +273,13 @@ module.exports = {
 
       await cadPutModel.putVisitQuery(visitCode, params);
       res.status(200).json({
-        codigo: visitCode,
-        cliente: params[1],
-        data: params[2],
-        descricao: params[3],
-        obsevacao: params[4],
+        data: params[0],
+        descricao: params[1],
+        observacao: params[2],
       });
 
     } catch (error) {
 
-      console.log(error);
       res.status(500).json({ msg: 'Ocorreu um erro no servidor, tente mais tarde.' });
 
     }

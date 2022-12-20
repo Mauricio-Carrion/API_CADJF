@@ -32,7 +32,7 @@ module.exports = {
 
   putVisitQuery: (code, params) => {
     return new Promise((resolve, reject) => {
-      db.query(`UPDATE cadvis SET cli_id = ${params[0]}, datvis = '${params[1]}', desvis = '${params[2]}', obsvis = '${params[3]}' WHERE id_vis = ${code}`,
+      db.query(`UPDATE cadvis SET datvis = '${params[0]}', desvis = '${params[1]}', obsvis = '${params[2]}' WHERE id_vis = ${code}`,
         (error, results) => {
           if (error) { return reject(error); }
           resolve(results);
