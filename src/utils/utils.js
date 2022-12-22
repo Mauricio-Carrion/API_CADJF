@@ -15,5 +15,10 @@ const unconvertImage = (binary) => {
   }
 }
 
+const justDate = (dbDate) => {
+  const stringDate = JSON.parse(JSON.stringify(dbDate))
+  const date = stringDate.split('T')[0]
+  return date
+}
 
-module.exports = { convertImage, unconvertImage }
+module.exports = { convertImage, unconvertImage, justDate }

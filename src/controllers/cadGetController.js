@@ -1,5 +1,5 @@
 const cadGetModel = require('../models/cadGetModel');
-const { unconvertImage } = require('../utils/utils')
+const { unconvertImage, justDate } = require('../utils/utils')
 
 module.exports = {
   /**********GET************/
@@ -160,7 +160,7 @@ module.exports = {
       if (visit) {
 
         res.status(200).json({
-          data: `${visit.datvis}`,
+          data: `${justDate(visit.datvis)}`,
           descricao: `${visit.desvis}`,
           observacao: `${visit.obsvis}`
         });
@@ -186,18 +186,17 @@ module.exports = {
 
   // Busca todas visitas
   getAllVisits: async (req, res) => {
-    let result = [];
 
     let visits = await cadGetModel.getAllVisitsQuery();
 
-    for (let i in visits) {
-      result.push({
-        codigo: visits[i].id_vis,
-        data: visits[i].datvis,
-        descricao: visits[i].desvis,
-        observacao: visits[i].obsvis
-      });
-    }
+    let result = visits.map(visit => {
+      return {
+        codigo: visit.id_vis,
+        data: justDate(visit.datvis),
+        descricao: visit.desvis,
+        observacao: visit.obsvis
+      }
+    });
 
     if (result.length > 0) {
 
@@ -227,7 +226,7 @@ module.exports = {
       for (let i in visits) {
         result.push({
           codigo: visits[i].id_vis,
-          data: visits[i].datvis,
+          data: justDate(visits[i].datvis),
           descricao: visits[i].desvis,
           observacao: visits[i].obsvis
         });
@@ -241,7 +240,6 @@ module.exports = {
     } else {
 
       return res.status(404).json({ msg: 'Cliente não possui visitas.' });
-
     }
   },
 
