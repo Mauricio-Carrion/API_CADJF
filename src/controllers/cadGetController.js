@@ -149,6 +149,27 @@ module.exports = {
     }
   },
 
+  getClientsStatus: async (req, res) => {
+    let statusDB = await cadGetModel.getClientStatusQuery()
+
+    let result = statusDB.map(status => {
+      return {
+        status: status.stacli,
+        qtd: status.valueStatus
+      }
+    })
+
+    if (result) {
+
+      res.status(200).json(result)
+
+    } else {
+
+      res.status(404).json({ msg: 'Não foram encontrados clientes' })
+
+    }
+  },
+
   // Busca uma visita
   getVisit: async (req, res) => {
     let visitCode = parseInt(req.params.codigo);

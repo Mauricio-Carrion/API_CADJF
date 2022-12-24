@@ -73,6 +73,16 @@ module.exports = {
     });
   },
 
+  getClientStatusQuery: () => {
+    return new Promise((resolve, reject) => {
+      db.query('SELECT stacli, count(stacli) as valueStatus FROM cadcli GROUP BY stacli',
+        (error, results) => {
+          if (error) { return reject(error); }
+          resolve(results);
+        });
+    });
+  },
+
   getVisitQuery: (visitCode) => {
     return new Promise((resolve, reject) => {
       db.query(`SELECT datvis, desvis, obsvis FROM cadvis WHERE id_vis = ${visitCode}`,

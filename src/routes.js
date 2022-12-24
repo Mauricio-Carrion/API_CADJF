@@ -21,6 +21,7 @@ router.get('/visita/:codigo', checkToken, checkUserToken, cadGetController.getVi
 router.get('/visita_cliente/:codigo', checkToken, checkUserToken, cadGetController.getVisitsByClient);
 router.get('/cliente_usuario/:codigo', checkToken, checkUserToken, cadGetController.getClientsByUser);
 router.get('/logs', checkToken, checkUserToken, cadGetController.getLogs);
+router.get('/cliente_status', checkToken, checkUserToken, cadGetController.getClientsStatus);
 
 //POST
 router.post('/clientes', checkToken, checkUserToken, cadPostController.postClient);
