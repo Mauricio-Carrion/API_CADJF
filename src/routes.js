@@ -28,13 +28,13 @@ router.post('/visitas', checkToken, checkUserToken, cadPostController.postVisits
 
 //PUT
 router.put('/usuario/:codigo', checkToken, checkUserToken, checkAdmin, cadPutController.putUser);
-router.put('/cliente/:codigo', checkToken, checkUserToken, checkAdmin, cadPutController.putClient);
-router.put('/visita/:codigo', checkToken, checkUserToken, checkAdmin, cadPutController.putVisit);
+router.put('/cliente/:codigo', checkToken, checkUserToken, cadPutController.putClient);
+router.put('/visita/:codigo', checkToken, checkUserToken, cadPutController.putVisit);
 
 //DELETE
 router.delete('/usuario/:codigo', checkToken, checkUserToken, checkAdmin, cadDeleteController.deleteUser);
 router.delete('/cliente/:codigo', checkToken, checkUserToken, checkAdmin, cadDeleteController.deleteClient);
-router.delete('/visita/:codigo', checkToken, checkUserToken, checkAdmin, cadDeleteController.deleteVisit);
+router.delete('/visita/:codigo', checkToken, checkUserToken, cadDeleteController.deleteVisit);
 
 
 module.exports = router;
