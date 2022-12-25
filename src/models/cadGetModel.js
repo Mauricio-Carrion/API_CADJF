@@ -213,6 +213,16 @@ module.exports = {
     });
   },
 
+  getUsersClientQuery: () => {
+    return new Promise((resolve, reject) => {
+      db.query('SELECT cadusu.usuario, COUNT(cadcli.id_cli) AS qtdcli FROM cadusu INNER JOIN cadcli ON cadusu.id_usu = cadcli.usu_id GROUP BY cadusu.id_usu',
+        (error, results) => {
+          if (error) { return reject(error); }
+          resolve(results);
+        });
+    });
+  },
+
   getVisitsByClientQuery: (clientCode) => {
     return new Promise((resolve, reject) => {
       db.query(`SELECT id_vis, datvis, desvis, obsvis FROM cadvis WHERE cli_id = ${clientCode}`,

@@ -68,6 +68,27 @@ module.exports = {
     }
   },
 
+  getUsersClient: async (req, res) => {
+    let usersDB = await cadGetModel.getUsersClientQuery()
+
+    let result = usersDB.map(status => {
+      return {
+        usuario: status.usuario,
+        qtdClientes: status.qtdcli
+      }
+    })
+
+    if (result) {
+
+      res.status(200).json(result)
+
+    } else {
+
+      res.status(404).json({ msg: 'Não foram encontrados clientes' })
+
+    }
+  },
+
   //Busca um cliente
   getClient: async (req, res) => {
 
