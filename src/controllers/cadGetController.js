@@ -180,15 +180,57 @@ module.exports = {
       }
     })
 
-    if (result) {
+    if (result.length == 1) {
+      switch (result[0].status) {
+        case 1:
 
-      res.status(200).json(result)
+          result.push({ status: 2, qtd: 0 })
+          result.push({ status: 3, qtd: 0 })
+          break
+
+        case 2:
+
+          result.unshift({ status: 1, qtd: 0 })
+          result.push({ status: 3, qtd: 0 })
+          break
+
+        case 3:
+
+          result.unshift({ status: 2, qtd: 0 })
+          result.unshift({ status: 1, qtd: 0 })
+          break
+
+        default:
+      }
+
+      return res.status(200).json(result)
+
+    } else if (result.length === 2) {
+
+      if (result[0].status === 1 && result[1].status === 2) {
+
+        result.push({ status: 3, qtd: 0 })
+
+      } else if (result[0].status === 2 && result[1].status === 3) {
+
+        result.unshift({ status: 1, qtd: 0 })
+
+      }
+
+      return res.status(200).json(result)
+
+    }
+
+    if (result.length === 3) {
+
+      return res.status(200).json(result)
 
     } else {
 
-      res.status(404).json({ msg: 'Não foram encontrados clientes' })
+      return res.status(404).json({ msg: 'Clientes nao encontrados' });
 
     }
+
   },
 
   // Busca uma visita
