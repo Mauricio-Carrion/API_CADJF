@@ -170,6 +170,25 @@ module.exports = {
     }
   },
 
+  getStatusCard: async (req, res) => {
+
+    let cardData = await cadGetModel.getStatusCardQuery();
+
+    if (cardData) {
+      let cardResultData = statusCard.map(status => {
+        return {
+          users: status.qtdUsuarios,
+          clients: status.qtdCliente,
+          visits: status.qtdVisits
+        }
+      })
+
+      return res.status(200).json(cardResultData)
+    }
+
+    return res.status(404).json({ msg: 'Dados não encontrados' });
+  },
+
   getClientsStatus: async (req, res) => {
     let statusDB = await cadGetModel.getClientStatusQuery()
 
