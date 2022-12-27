@@ -183,7 +183,7 @@ module.exports = {
         }
       })
 
-      return res.status(200).json(cardResultData)
+      return res.status(200).json(...cardResultData)
     }
 
     return res.status(404).json({ msg: 'Dados não encontrados' });
