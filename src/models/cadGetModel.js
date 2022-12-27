@@ -83,6 +83,16 @@ module.exports = {
     });
   },
 
+  getStatusCardQuery: () => {
+    return new Promise((resolve, reject) => {
+      db.query('SELECT (SELECT count(*) FROM cadusu) AS qtdUsuarios,(SELECT count(*) FROM cadcli) AS qtdClientes, (SELECT count(*) FROM cadvis) AS qtdVisitas',
+        (error, results) => {
+          if (error) { return reject(error); }
+          resolve(results);
+        });
+    });
+  },
+
   getVisitQuery: (visitCode) => {
     return new Promise((resolve, reject) => {
       db.query(`SELECT datvis, desvis, obsvis FROM cadvis WHERE id_vis = ${visitCode}`,

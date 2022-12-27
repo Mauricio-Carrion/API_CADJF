@@ -175,11 +175,11 @@ module.exports = {
     let cardData = await cadGetModel.getStatusCardQuery();
 
     if (cardData) {
-      let cardResultData = statusCard.map(status => {
+      let cardResultData = cardData.map(status => {
         return {
-          users: status.qtdUsuarios,
-          clients: status.qtdCliente,
-          visits: status.qtdVisits
+          usuarios: status.qtdUsuarios,
+          clientes: status.qtdClientes,
+          visitas: status.qtdVisitas
         }
       })
 
