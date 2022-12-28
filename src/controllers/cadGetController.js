@@ -246,7 +246,7 @@ module.exports = {
 
     } else {
 
-      return res.status(404).json({ msg: 'Clientes nao encontrados' });
+      return res.status(404).json({ msg: 'Ainda não há clientes cadastrados' });
 
     }
 
@@ -270,13 +270,13 @@ module.exports = {
 
       } else {
 
-        res.status(404).json({ msg: 'visita não encontrada' });
+        res.status(404).json({ msg: 'Visita não encontrada' });
 
       }
 
     } else {
 
-      res.status(422).json({ msg: 'insira um código válido' });
+      res.status(422).json({ msg: 'Insira um código válido' });
 
     }
   },
