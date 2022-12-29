@@ -310,7 +310,7 @@ module.exports = {
     }
 
     //Verifica observação
-    if (params[3].length > 50) {
+    if (params[3].length > 150) {
 
       return res.status(422).json({ msg: 'Use até 150 caracteres para descrição.' });
 
