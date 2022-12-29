@@ -199,7 +199,7 @@ module.exports = {
       }
     })
 
-    if (result.length == 1) {
+    if (result.length === 1) {
       switch (result[0].status) {
         case 1:
 
@@ -225,7 +225,7 @@ module.exports = {
       return res.status(200).json(result)
 
     } else if (result.length === 2) {
-
+      console.log(result);
       if (result[0].status === 1 && result[1].status === 2) {
 
         result.push({ status: 3, qtd: 0 })
@@ -233,6 +233,10 @@ module.exports = {
       } else if (result[0].status === 2 && result[1].status === 3) {
 
         result.unshift({ status: 1, qtd: 0 })
+
+      } else if (result[0].status === 1 && result[1].status === 3) {
+
+        result.splice(1, 0, { status: 2, qtd: 0 })
 
       }
 
