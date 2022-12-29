@@ -265,11 +265,7 @@ module.exports = {
     ];
 
     //Filtra parametros preenchidos
-    const params = reqParams.filter(e => {
-      if (e) {
-        return e
-      }
-    });
+    const params = reqParams.filter(e => e ? e : null);
 
     //valida quantidade de parametros preenchidos
     if (params.length < 4) {
