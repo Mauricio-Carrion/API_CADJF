@@ -1,15 +1,61 @@
 const db = require('../db');
 
 module.exports = {
+
   //GET Query's
   getClientQuery: (code) => {
     return new Promise((resolve, reject) => {
-      db.query(`SELECT id_cli, nomfan, razcli, cnpj, endcli, numend, cidend, baiend, obscli, stacli  FROM cadcli WHERE cnpj = ${code}`,
+      db.query(`SELECT id_cli, usu_id, nomfan, razcli, cnpj, obscli, stacli  FROM cadcli WHERE id_cli = ${code}`,
         (error, results) => {
           if (error) { return reject(error); }
 
           if (results.length > 0) {
-            resolve(results[0]);
+            resolve(JSON.parse(JSON.stringify(results[0])));
+          } else {
+            resolve(false);
+          }
+        });
+    });
+  },
+
+  getClientCNPJQuery: (cnpj) => {
+    return new Promise((resolve, reject) => {
+      db.query(`SELECT cnpj FROM cadcli WHERE cnpj = ${cnpj}`,
+        (error, results) => {
+          if (error) { return reject(error); }
+
+          if (results.length > 0) {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        });
+    });
+  },
+
+  getClientIdQuery: (id) => {
+    return new Promise((resolve, reject) => {
+      db.query(`SELECT id_cli FROM cadcli WHERE id_cli = ${id}`,
+        (error, results) => {
+          if (error) { return reject(error); }
+
+          if (results.length > 0) {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        });
+    });
+  },
+
+  getClientHasVisitQuery: (codeClient) => {
+    return new Promise((resolve, reject) => {
+      db.query(`SELECT cli_id FROM cadvis WHERE cli_id = ${codeClient}`,
+        (error, results) => {
+          if (error) { return reject(error); }
+
+          if (results.length > 0) {
+            resolve(true);
           } else {
             resolve(false);
           }
@@ -19,7 +65,27 @@ module.exports = {
 
   getAllClientsQuery: () => {
     return new Promise((resolve, reject) => {
-      db.query('SELECT id_cli, nomfan, razcli, cnpj, endcli, numend, cidend, baiend, obscli, stacli  FROM cadcli',
+      db.query('SELECT cadusu.id_usu, cadusu.nomusu, cadcli.id_cli, cadcli.usu_id ,cadcli.nomfan, cadcli.razcli, cadcli.cnpj, cadcli.obscli, cadcli.stacli FROM cadusu INNER JOIN cadcli ON cadusu.id_usu = cadcli.usu_id',
+        (error, results) => {
+          if (error) { return reject(error); }
+          resolve(results);
+        });
+    });
+  },
+
+  getClientStatusQuery: () => {
+    return new Promise((resolve, reject) => {
+      db.query('SELECT stacli, count(stacli) as valueStatus FROM cadcli GROUP BY stacli',
+        (error, results) => {
+          if (error) { return reject(error); }
+          resolve(results);
+        });
+    });
+  },
+
+  getStatusCardQuery: () => {
+    return new Promise((resolve, reject) => {
+      db.query('SELECT (SELECT count(*) FROM cadusu) AS qtdUsuarios,(SELECT count(*) FROM cadcli) AS qtdClientes, (SELECT count(*) FROM cadvis) AS qtdVisitas',
         (error, results) => {
           if (error) { return reject(error); }
           resolve(results);
@@ -34,7 +100,22 @@ module.exports = {
           if (error) { return reject(error); }
 
           if (results.length > 0) {
-            resolve(results[0]);
+            resolve(JSON.parse(JSON.stringify(results[0])));
+          } else {
+            resolve(false);
+          }
+        });
+    });
+  },
+
+  getVisitIdQuery: (id) => {
+    return new Promise((resolve, reject) => {
+      db.query(`SELECT id_vis FROM cadvis WHERE id_vis = ${id}`,
+        (error, results) => {
+          if (error) { return reject(error); }
+
+          if (results.length > 0) {
+            resolve(true);
           } else {
             resolve(false);
           }
@@ -44,7 +125,7 @@ module.exports = {
 
   getAllVisitsQuery: () => {
     return new Promise((resolve, reject) => {
-      db.query('SELECT datvis, desvis, obsvis FROM cadvis',
+      db.query('SELECT id_vis, datvis, desvis, obsvis FROM cadvis',
         (error, results) => {
           if (error) { return reject(error); }
           resolve(results);
@@ -52,24 +133,14 @@ module.exports = {
     });
   },
 
-  getAllUsersQuery: () => {
+  getUserQuery: (userName) => {
     return new Promise((resolve, reject) => {
-      db.query('SELECT id_usu, usuario, senha, nomusu, sobusu, adm FROM cadusu',
-        (error, results) => {
-          if (error) { return reject(error); }
-          resolve(results);
-        });
-    });
-  },
-
-  getUserQuery: (userCode) => {
-    return new Promise((resolve, reject) => {
-      db.query(`SELECT id_usu, usuario, senha, nomusu, sobusu, adm FROM cadusu WHERE id_usu = ${userCode}`,
+      db.query(`SELECT id_usu, image ,usuario, senha, nomusu, sobusu, adm FROM cadusu WHERE usuario = '${userName}'`,
         (error, results) => {
           if (error) { return reject(error); }
 
           if (results.length > 0) {
-            resolve(results[0]);
+            resolve(JSON.parse(JSON.stringify(results[0])));
           } else {
             resolve(false);
           }
@@ -77,9 +148,94 @@ module.exports = {
     });
   },
 
+  getUserNameQuery: (userName) => {
+    return new Promise((resolve, reject) => {
+      db.query(`SELECT usuario FROM cadusu WHERE usuario = '${userName}'`,
+        (error, results) => {
+          if (error) { return reject(error); }
+
+          if (results.length > 0) {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        });
+    });
+  },
+
+  getPasswordQuery: (userName) => {
+    return new Promise((resolve, reject) => {
+      db.query(`SELECT senha FROM cadusu WHERE usuario = '${userName}'`,
+        (error, results) => {
+          if (error) { return reject(error); }
+          resolve(JSON.parse(JSON.stringify(results)));
+        });
+    });
+  },
+
+  getUserIdQuery: (id) => {
+    return new Promise((resolve, reject) => {
+      db.query(`SELECT id_usu FROM cadusu WHERE id_usu = ${id}`,
+        (error, results) => {
+          if (error) { return reject(error); }
+
+          if (results.length > 0) {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        });
+    });
+  },
+
+  getUserNameById: (id) => {
+    return new Promise((resolve, reject) => {
+      db.query(`SELECT usuario FROM cadusu WHERE id_usu = ${id}`,
+        (error, results) => {
+          if (error) { return reject(error); }
+          resolve(JSON.parse(JSON.stringify(results)));
+        })
+    })
+  },
+
+  getUserHasClientQuery: (codeUser) => {
+    return new Promise((resolve, reject) => {
+      db.query(`SELECT usu_id FROM cadcli WHERE usu_id = ${codeUser}`,
+        (error, results) => {
+          if (error) { return reject(error); }
+
+          if (results.length > 0) {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        });
+    });
+  },
+
+  getAllUsersQuery: () => {
+    return new Promise((resolve, reject) => {
+      db.query('SELECT id_usu, image ,usuario, nomusu, sobusu, adm FROM cadusu',
+        (error, results) => {
+          if (error) { return reject(error); }
+          resolve(results);
+        });
+    });
+  },
+
+  getUsersClientQuery: () => {
+    return new Promise((resolve, reject) => {
+      db.query('SELECT cadusu.usuario, COUNT(cadcli.id_cli) AS qtdcli FROM cadusu INNER JOIN cadcli ON cadusu.id_usu = cadcli.usu_id GROUP BY cadusu.id_usu',
+        (error, results) => {
+          if (error) { return reject(error); }
+          resolve(results);
+        });
+    });
+  },
+
   getVisitsByClientQuery: (clientCode) => {
     return new Promise((resolve, reject) => {
-      db.query(`SELECT datvis, desvis, obsvis FROM cadvis WHERE cli_id = ${clientCode}`,
+      db.query(`SELECT id_vis, datvis, desvis, obsvis FROM cadvis WHERE cli_id = ${clientCode}`,
         (error, results) => {
           if (error) { return reject(error) }
           resolve(results);
@@ -89,7 +245,7 @@ module.exports = {
 
   getClientsByUserQuery: (clientCode) => {
     return new Promise((resolve, reject) => {
-      db.query(`SELECT id_cli, nomfan, razcli, cnpj, endcli, numend, cidend, baiend, obscli, stacli FROM cadcli WHERE usu_id = ${clientCode}`,
+      db.query(`SELECT id_cli, nomfan, razcli, cnpj, obscli, stacli FROM cadcli WHERE usu_id = ${clientCode}`,
         (error, results) => {
           if (error) { return reject(error); }
           resolve(results);
@@ -97,14 +253,16 @@ module.exports = {
     });
   },
 
-  //POST Query's
-  postClientQuery: (params) => {
-    console.log(params)
+  getLogsQuery: () => {
     return new Promise((resolve, reject) => {
-      db.query(`INSERT INTO cadcli (usu_id, nomfan, razcli, cnpj, endcli, numend, cidend, baiend, obscli, stacli) VALUES (${params[0]}, '${params[1]}', '${params[2]}', ${params[3]}, '${params[4]}', ${params[5]}, '${params[6]}', '${params[7]}', '${params[8]}', '${params[9]}')`,
+      db.query('SELECT id_log, tiplog, usulog, datlog FROM cadlog',
         (error, results) => {
           if (error) { return reject(error); }
-          resolve(results);
+          if (results.length > 0) {
+            resolve(results);
+          } else {
+            resolve(false);
+          }
         });
     });
   }
