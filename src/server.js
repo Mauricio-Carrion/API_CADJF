@@ -1,12 +1,11 @@
-require('dotenv').config({ path: '.env' });
-const os = require('os');
+require('dotenv').config({ path: 'variables.env' });
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const routes = require('./routes');
 const server = express();
 
-// const network = os.networkInterfaces
+// const network = os.networkInterfacesg
 // const interface = network.lo[0].address
 
 server.use(cors());
