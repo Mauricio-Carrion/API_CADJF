@@ -9,19 +9,22 @@ services:
       - MYSQL_ROOT_PASSWORD=$DB_PASSWORD
       - MYSQL_DATABASE=$DB_NAME
     ports:
-      - $DB_PORT:$MYSQLDB_DOCKER_PORT
+      - 3306:3306
     volumes:
       - db:/var/lib/mysql
+      - ./database:/docker-entrypoint-initdb.d
   app:
     depends_on:
       - mysqldb
-    build: ./api_cadjf
+    build:
+      context: .
+      dockerfile: ./Dockerfile
     restart: unless-stopped
     env_file: ./.env
     ports:
-      - $PORT:$NODE_DOCKER_PORT
+      - 3087:3087
     environment:
-      - DB_HOST=$DB_HOST
+      - DB_HOST=mysqldb
       - DB_USER=$DB_USER
       - DB_PASSWORD=$DB_PASSWORD
       - DB_NAME=$DB_NAME
