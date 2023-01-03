@@ -1,4 +1,8 @@
 CREATE DATABASE IF NOT EXISTS dbCad;
+CREATE USER IF NOT EXISTS 'jf.mysql'@'%' IDENTIFIED WITH mysql_native_password BY '#@jj2802';
+GRANT ALL ON jf.mysql.* TO 'jf.mysql'@'%';
+
+FLUSH PRIVILEGES;
 
 USE dbCad;
 
