@@ -13,7 +13,8 @@ services:
     ports:
       - 3309:3309
     volumes:
-      - ./database/dbCad.sql:/docker-entrypoint-initdb.d
+      - db:/var/lib/mysql
+      - ./database:/docker-entrypoint-initdb.d
   app:
     depends_on:
       - mysqldb
