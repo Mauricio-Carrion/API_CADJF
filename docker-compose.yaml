@@ -3,11 +3,13 @@ version: '3.3'
 services:
   mysqldb:
     image: mysql:5.7
-    command: --default-authentication-plugin=mysql_native_password
+    command: --default-authentication-plugin=$DB_PASSWORD
     restart: unless-stopped
     env_file: ./.env
     environment:
       - MYSQL_ROOT_PASSWORD=$DB_PASSWORD
+      - MYSQL_USER:$DB_USER
+      - MYSQL_PASSWORD:$DB_PASSWORD
       - MYSQL_DATABASE=$DB_NAME
       - MYSQL_TCP_PORT=3309
     ports:
