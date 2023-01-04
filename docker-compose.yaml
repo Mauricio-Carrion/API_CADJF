@@ -7,10 +7,10 @@ services:
     restart: unless-stopped
     env_file: ./.env
     environment:
-      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
-      - MYSQL_USER:${DB_USER}
-      - MYSQL_PASSWORD:${DB_PASSWORD}
-      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_ROOT_PASSWORD=#@jj2802
+      - MYSQL_USER:jf.mysql
+      - MYSQL_PASSWORD:#@jj2802
+      - MYSQL_DATABASE=dbCad
       - MYSQL_TCP_PORT=3309
     ports:
       - 3309:3309
