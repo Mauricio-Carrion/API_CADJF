@@ -1,6 +1,7 @@
 FROM node:18
-WORKDIR /API_CAFJF
+WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
+EXPOSE 3087
 CMD [ "node", "./src/server.js" ]
